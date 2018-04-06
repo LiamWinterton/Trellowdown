@@ -14,8 +14,11 @@ trellowdown.auth().then(isAuthed => {
         const userCards = Trellowdown.getUserCards()
         const userID = Trellowdown.getUserID()
 
-        const printBoards = cards => {
-            jQuery("#root").html(cards[0].name)
+        const printCards = cards => {
+            
+            cards.map(card => {
+                jQuery("#root").append(card.name + "<br />")
+            })
         }
 
         // Get all the users cards and the user ID, then
@@ -27,13 +30,13 @@ trellowdown.auth().then(isAuthed => {
             cards = TrelloCard.filterByClosed(cards)
             cards = TrelloCard.filterByUserID(cards, id)
 
-            // printBoards(cards)
+            printCards(cards)
     
             // Setup the structure to be used in the App
             let boards = TrelloCard.organizeCardsByBoard(cards)
-            TrelloBoard.filterBoardsByRelevance(boards).then(boards => {
-                console.log(boards)
-            })
+            boards = TrelloBoard.filterBoardsByRelevance(boards)
+
+            
         })
     }
 })
