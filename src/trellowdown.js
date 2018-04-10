@@ -48,4 +48,8 @@ export class Trellowdown {
             })
         })
     }
+
+    static addBoardInfo(boards) {
+        console.log(boards)
+    }
 }
