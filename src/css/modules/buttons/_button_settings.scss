@@ -1,0 +1,35 @@
+// Button Settings
+$button-border-radius: 4px;
+$button-padding: $gutter $gutter-small;
+
+// Button Colours
+$primary-color: #2196F3;
+$primary-color-dark: #1976D2;
+$primary-color-light: #BBDEFB;
+$primary-color-text: #FFFFFF;
+$secondary-color: #4CAF50;
+$secondary-color-dark: #4B8650;
+
+// Button Map
+$buttons: (
+	primary: (
+		color: $primary-color-text,
+		background: $primary-color,
+		background-hover: $primary-color-dark,
+	),
+	secondary: (
+		color: $primary-color-text,
+		background: $secondary-color,
+		background-hover: $secondary-color-dark
+	),
+	danger: (
+		color: $primary-color-text,
+		background: #dd3333,
+		background-hover: #b8352e,
+	),
+	black: (
+		color: $primary-color-text,
+		background: #242424,
+		background-hover: #343434
+	)
+);

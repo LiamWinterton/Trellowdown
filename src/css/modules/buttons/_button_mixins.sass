@@ -1,0 +1,104 @@
+// =============================
+// buttonDefaults
+// =============================
+=buttonDefaults
+	display: inline-block
+	padding: $gutter-small $gutter
+	border-radius: 4px
+	text-align: center
+	text-decoration: none
+	+defaultTransition
+
+// =============================
+// buttonClear
+// =============================
+=buttonClear($styleInit, $styleHover)
+	$clearButtonColor: map-get(map-get($buttons, $styleInit), background)
+	$clearButtonColorHover: map-get(map-get($buttons, $styleInit), background-hover)
+
+	@if $styleHover != "darken"
+		$clearButtonColorHover: map-get(map-get($buttons, $styleHover), background)
+
+	background: none!important
+	border-radius: 0
+	color: map-get(map-get($buttons, $styleInit), background)
+	box-shadow: inset 0 0 0 2px rgba(map-get(map-get($buttons, $styleInit), background), 0.1)
+	transition: color 0.25s
+	position: relative
+	font-weight: bold
+
+	&::before,
+	&::after
+		box-sizing: inherit
+		content: ''
+		position: absolute
+		width: 100%
+		height: 100%
+		border: 2px solid transparent
+		width: 0
+		height: 0
+
+	&::before
+		top: 0
+		left: 0
+
+	&::after
+		bottom: 0
+		right: 0
+
+	// HOVER
+	&:hover
+		color: $clearButtonColorHover
+
+	&:hover::before,
+	&:hover::after
+		width: 100%
+		height: 100%
+
+	&:hover::before
+		border-top-color: $clearButtonColorHover
+		border-right-color: $clearButtonColorHover
+		transition: width 0.25s ease-out, height 0.25s ease-out 0.25s
+
+	&:hover::after
+		border-bottom-color: $clearButtonColorHover
+		border-left-color: $clearButtonColorHover
+		transition: border-color 0s ease-out 0.5s, width 0.25s ease-out 0.5s, height 0.25s ease-out 0.75s
+
+// =============================
+// buttonColours
+// =============================
+=buttonCute($color, $colorHover)
+	$cuteButtonColor: map-get(map-get($buttons, $color), background)
+	$cuteButtonColorHover: map-get(map-get($buttons, $color), background-hover)
+
+	@if $colorHover != "darken"
+		$cuteButtonColorHover: map-get(map-get($buttons, $colorHover), background)
+
+	background: $cuteButtonColor
+	border-bottom: 4px solid $cuteButtonColorHover
+	position: relative
+	top: 0
+
+	&:hover
+		border-bottom-width: 2px
+		padding-top: $gutter-small + 1px
+		padding-bottom: $gutter-small + 1px
+		top: 2px
+
+// =============================
+// buttonColours
+// =============================
+=buttonColours($color, $colorHover: "darken", $clear: "false", $cute: "false")
+	@if $clear == "true"
+		+buttonClear($color, $colorHover)
+
+	@elseif $cute == "true"
+		+buttonCute($color, $colorHover)
+		
+	@else
+		background: map-get(map-get($buttons, $color), background)
+		color: map-get(map-get($buttons, $color), color)
+
+		&:hover
+			background: map-get(map-get($buttons, $color), background-hover)

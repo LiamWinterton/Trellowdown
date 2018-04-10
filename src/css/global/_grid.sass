@@ -1,0 +1,69 @@
+// General breakdown
+
+// =================
+// Mobile:
+// =================
+// If in 2n, grid 2. (2, 4, 8)
+// Else, grid 1 (1, 3, 5, 7)
+
+// =================
+// Tablet:
+// =================
+// If n < 4, show as intended (1, 2, 3, 4)
+// If in 3n, grid 3 (6)
+// Else grid 4 (5, 7)
+
+// =================
+// Desktop:
+// =================
+// Show as per class
+
+=grid($grid)
+    display: grid
+    grid-template-columns: repeat(#{$grid}, 1fr)
+    grid-gap: $gutter
+
+    & > *
+        margin-bottom: 0
+        min-width: 0
+
+    // Tablet styles
+    @if $grid % 2 == 0
+        +mq($until: tablet)
+            grid-template-columns: repeat(2, 1fr)
+    @else
+        +mq($until: tablet) 
+            grid-template-columns: repeat(1, 1fr)
+
+    // Tablet - desktop styles AND Until desktop, hide 4+ elements
+    @if $grid > 4
+        @if $grid % 3 == 0
+            +mq($until: tablet) 
+                grid-template-columns: repeat(1, 1fr)
+
+            +mq($from: tablet, $until: desktop)
+                grid-template-columns: repeat(3, 1fr)
+
+            +mq($until: desktop)
+                & > *:nth-of-type(n+4)
+                        display: none
+        @else
+            +mq($from: tablet, $until: desktop)
+                grid-template-columns: repeat(4, 1fr)
+
+            +mq($until: desktop)
+                & > *:nth-of-type(n+5)
+                    display: none
+
+    // If grid inside grid, respect class rules
+    @each $grid in $grids
+        .grid-#{$grid}
+            display: grid
+            grid-template-columns: repeat(#{$grid}, 1fr)
+
+
+$grids: (1,2,3,4,5,6,7,8)
+
+@each $grid in $grids
+    .grid-#{$grid}
+        +grid($grid)

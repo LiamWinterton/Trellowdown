@@ -1,0 +1,23 @@
+.button
+	+buttonDefaults
+	+buttonColours(primary)
+
+	&.button-secondary
+		+buttonColours(secondary)
+
+	&.button-danger
+		+buttonColours(danger)
+
+	&.button-clear
+		+buttonColours(black, primary, $clear: "true")
+
+	&.button-cute
+		+buttonColours(primary, $cute: "true")
+
+		&.button-cute-secondary
+			+buttonColours(secondary, $cute: "true")
+
+		&.button-cute-danger
+			+buttonColours(danger, $cute: "true")
+		
+		
