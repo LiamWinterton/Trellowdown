@@ -30,10 +30,10 @@ const trellowdown = new Trellowdown()
 
                 // Add in the cards to each board
                 boards = TrelloBoard.addCards(emptyBoards, cards)
-                let getFinalBoards = TrelloBoard.addBoardNames(boards)
-                
-                getFinalBoards.then(boards => {
-                    console.log(boards)
+                let finishedBoards = TrelloBoard.addBoardNames(boards)
+
+                finishedBoards.then(boards => {
+                    jQuery("#app").html(Trellowdown.generateHTML(boards))
                 })
             })
         }

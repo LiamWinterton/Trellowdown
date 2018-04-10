@@ -49,7 +49,17 @@ export class Trellowdown {
         })
     }
 
-    static addBoardInfo(boards) {
-        console.log(boards)
+    static generateHTML(boards) {
+        let html = '<div class="trellowdown">'
+
+        boards.forEach(board => {
+            html += '<div class="board">'
+                html += '<h2>' + board.name + '</h2>'
+            html += '</div>'
+        })
+
+        html += '</div>'
+
+        return html
     }
 }

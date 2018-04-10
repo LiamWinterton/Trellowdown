@@ -17,13 +17,15 @@ export class TrelloBoard {
         return new Promise(resolve => {
             let newBoards = [ ...boards ]
 
-            newBoards.forEach(board => {
-                Trello.get(`boards/${board.id}`).then(data => {
+            const added = newBoards.map(board => {
+                return Trello.get(`boards/${board.id}`).then(data => {
                     board.name = data.name
                 })
             })
 
-            resolve(newBoards)
+            Promise.all(added).then(() => {
+                resolve(newBoards)
+            })
         })
     }
 
