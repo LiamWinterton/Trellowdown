@@ -51,4 +51,17 @@ export class TrelloBoard {
 
         return newBoards
     }
+
+    static sortBoards(boards) {
+        let newBoards = [ ...boards ]
+
+        newBoards.sort((a, b) => {
+            const aName = a.name.toUpperCase()
+            const bName = b.name.toUpperCase()
+
+            return (aName > bName) ? 1 : -1
+        })
+
+        return newBoards
+    }
 }

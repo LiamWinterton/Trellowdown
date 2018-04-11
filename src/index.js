@@ -22,8 +22,6 @@ const trellowdown = new Trellowdown()
                 // Remove any unarchived cards and make sure all cards have user attached
                 cards = TrelloCard.filterByClosed(cards)
                 cards = TrelloCard.filterByUserID(cards, id)
-                // TrelloCard.filterByListName(cards, 'done')
-                console.log(cards)
 
                 // Setup the structure to be used in the App
                 let ids = TrelloCard.extractIdsFromCards(cards)
@@ -34,7 +32,8 @@ const trellowdown = new Trellowdown()
                 let finishedBoards = TrelloBoard.addBoardNames(boards)
 
                 finishedBoards.then(boards => {
-                    jQuery("#app").html(Trellowdown.generateHTML(boards))
+                    let sorted = TrelloBoard.sortBoards(boards)
+                    jQuery("#app").html(Trellowdown.generateHTML(sorted))
                 })
             })
         }

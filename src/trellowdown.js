@@ -58,26 +58,24 @@ export class Trellowdown {
 
             html += `<div class="board" id="${board.id} data-date="${boardDate.getTime()}">`
                 html += `<h2>${board.name}</h2>`
-
                 html += '<div class="content">'
 
                     board.cards.forEach(card => {
-
                         let cardTimestamp = card.id.substring(0, 8)
                         let cardDate = new Date(1000 * parseInt(cardTimestamp, 16));
+                        let readable = `${cardDate.getDate()}/${cardDate.getMonth() + 1}/${cardDate.getFullYear()}`
 
                         html += `<div class="card" id="${card.id}" data-date="${cardDate.getTime()}">`
                             html += `<h3><a href="${card.url}" target="_blank">${card.name}</a></h3>`
                             html += '<div class="more-info">'
                                 html += '<ul>'
-                                    html += `<li>Created: ${cardDate}</li>`
+                                    html += `<li>Created: ${readable}</li>`
                                 html += '</ul>'
                             html += '</div>'
                         html += '</div>'
                     })
 
                 html += '</div>'
-
             html += '</div>'
         })
 
