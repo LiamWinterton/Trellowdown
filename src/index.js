@@ -18,18 +18,19 @@ const trellowdown = new Trellowdown()
             Promise.all([userCards, userID]).then(data => {
                 let cards = data[0]
                 let id = data[1]
-                let boards = []
 
                 // Remove any unarchived cards and make sure all cards have user attached
                 cards = TrelloCard.filterByClosed(cards)
                 cards = TrelloCard.filterByUserID(cards, id)
+                // TrelloCard.filterByListName(cards, 'done')
+                console.log(cards)
 
                 // Setup the structure to be used in the App
                 let ids = TrelloCard.extractIdsFromCards(cards)
                 let emptyBoards = TrelloBoard.generateStructure(ids)
 
                 // Add in the cards to each board
-                boards = TrelloBoard.addCards(emptyBoards, cards)
+                let boards = TrelloBoard.addCards(emptyBoards, cards)
                 let finishedBoards = TrelloBoard.addBoardNames(boards)
 
                 finishedBoards.then(boards => {
