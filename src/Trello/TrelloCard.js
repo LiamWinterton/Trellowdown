@@ -1,49 +1,54 @@
 export class TrelloCard {
+    /**
+     * Filters a list of boards by whether the board is closed or not
+     * @param {Object[]} cardsArray 
+     * @returns {Object[]} An Array of Boards that aren't closed
+     */
     static filterByClosed(cardsArray) {
         return cardsArray.filter(card => (card.closed) ? false : true)
     }
 
+    /**
+     * Filters a list of cards by whether the user is a member or not
+     * @param {Object[]} cardsArray Array of cards
+     * @param {number} id Current User
+     * @returns {Object[]} An Array of cards that the user is a member of
+     */
     static filterByUserID(cardsArray, id) {
         return cardsArray.filter(card => (card.idMembers.includes(id)))
     }
 
+    /**
+     * Returns an Array of unique Board ID's from an Array of card Objects
+     * @param {Object[]} cardsArray
+     * @returns {string[]} An Array of unique Board ID's
+     */
     static extractIdsFromCards(cardsArray) {
         return [...new Set(cardsArray.map(card => card.idBoard))]
     }
 
+    /**
+     * Returns an Array of unique List ID's from an Array of card Objects
+     * @param {Object[]} cardsArray
+     * @returns {string[]} an Array of unique List ID's
+     */
     static extractListIdsFromCards(cardsArray) {
         return [...new Set(cardsArray.map(card => card.idList))]
     }
 
-    static filterByListName(cardsArray, name) {
-        return new Promise(resolve => {
-            let listIds = this.extractListIdsFromCards(cardsArray)
-            let lists = []
-            let badIds = []
-
-            listIds.forEach(id => {
-                Trello.get(`list/${id}`).then(data => {
-                    lists.push(data)
-                })
-            })
-
-            lists.forEach(list => {
-                if(list.name == "Done") {
-                    badIds.push(list.id)
-                }
-            })
-
-            console.log(lists)
-            console.log(badIds)
-
-            // resolve(newCards)
-        })
-    }
-
+    /**
+     * Removes the HTML element of a card
+     * @param {number} cardID ID of the card
+     */
     static removeCard(cardID) {
         jQuery(`#${cardID}`).remove()
     }
 
+    /**
+     * Removes user from a card
+     * @param {number} userID ID of the current user
+     * @param {number} cardID ID of the card
+     */
     static removeFromCard(userID, cardID) {
         const removeURL = `cards/${cardID}/idMembers/${userID}`
 
@@ -52,6 +57,10 @@ export class TrelloCard {
         Trello.delete(removeURL, { idMember: userID }).then(() => this.removeCard(cardID))
     }
 
+    /**
+     * Adds superuser to the card
+     * @param {number} cardID ID of the card
+     */
     static addOllyToCard(cardID) {
         const addURL = `cards/${cardID}/idMembers`
         const OllyID = "5452114aee1bdab3526e47e1"
@@ -60,7 +69,8 @@ export class TrelloCard {
     }
 
     /**
-     * Removes you from the card, and adds Olly.
+     * Removes yourself from a card via the API, and adds the superuser
+     * @param {number} userID The current user ID
      */
     static handleCardFlag(userID) {
         jQuery("#app .trellowdown .board .card").each((index, card) => {
@@ -76,6 +86,11 @@ export class TrelloCard {
         })
     }
 
+    /**
+     * Generates the HTML for a given card.
+     * @param {Object} card {Object} - The Card object
+     * @returns {string} A div.card containing all the relevent card information
+     */
     static generateCardHTML(card) {
         let cardTimestamp = card.id.substring(0, 8)
         let cardDate = new Date(1000 * parseInt(cardTimestamp, 16));
