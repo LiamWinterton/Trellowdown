@@ -13,11 +13,18 @@ const trellowdown = new Trellowdown()
         if(isAuthed) {
             const userCards = Trellowdown.getUserCards()
             const userID = Trellowdown.getUserID()
+            const OllyID = "5452114aee1bdab3526e47e1"
 
             // Get all the users cards and the user ID, then
             Promise.all([userCards, userID]).then(data => {
+                const id = data[1]
+                const OllyID = "5452114aee1bdab3526e47e1"
+
+                const addEvents = () => {
+                    TrelloCard.handleCardFlag(id)
+                }
+
                 let cards = data[0]
-                let id = data[1]
 
                 // Remove any unarchived cards and make sure all cards have user attached
                 cards = TrelloCard.filterByClosed(cards)
@@ -34,6 +41,8 @@ const trellowdown = new Trellowdown()
                 finishedBoards.then(boards => {
                     let sorted = TrelloBoard.sortBoards(boards)
                     jQuery("#app").html(Trellowdown.generateHTML(sorted))
+                    
+                    addEvents()
                 })
             })
         }

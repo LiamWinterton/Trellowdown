@@ -1,12 +1,10 @@
 import { config } from './config'
+import { TrelloCard } from './Trello/TrelloCard'
+import { TrelloBoard } from './Trello/TrelloBoard'
 
 const axios = require('axios')
 
 export class Trellowdown {
-    constructor() {
-        this.userID = null
-    }
-
     auth() {
         return new Promise(resolve => {
             Trello.authorize({
@@ -56,24 +54,11 @@ export class Trellowdown {
             let boardTimestamp = board.id.substring(0, 8)
             let boardDate = new Date(1000 * parseInt(boardTimestamp, 16));
 
-            html += `<div class="board" id="${board.id} data-date="${boardDate.getTime()}">`
+            html += `<div class="board" id="${board.id}" data-date="${boardDate.getTime()}">`
                 html += `<h2>${board.name}</h2>`
                 html += '<div class="content">'
 
-                    board.cards.forEach(card => {
-                        let cardTimestamp = card.id.substring(0, 8)
-                        let cardDate = new Date(1000 * parseInt(cardTimestamp, 16));
-                        let readable = `${cardDate.getDate()}/${cardDate.getMonth() + 1}/${cardDate.getFullYear()}`
-
-                        html += `<div class="card" id="${card.id}" data-date="${cardDate.getTime()}">`
-                            html += `<h3><a href="${card.url}" target="_blank">${card.name}</a></h3>`
-                            html += '<div class="more-info">'
-                                html += '<ul>'
-                                    html += `<li>Created: ${readable}</li>`
-                                html += '</ul>'
-                            html += '</div>'
-                        html += '</div>'
-                    })
+                    board.cards.forEach(card => html += TrelloCard.generateCardHTML(card))
 
                 html += '</div>'
             html += '</div>'
