@@ -19,6 +19,25 @@ export class TrelloCard {
     }
 
     /**
+     * Filters a list of cards by whether the board is part of a blacklist
+     * @param {Object[]} cardsArray Array of cards
+     * @returns {Object[]} An Array of cards that are not in blacklisted boards
+     */
+    static filterByBoardBlacklist(cardsArray) {
+        return cardsArray.filter(card => this.isCardBlacklisted(card))
+    }
+
+    /**
+     * Checks to see if a card is part of a blacklisted board
+     * @param {Object} card The card to check
+     * @returns {boolean} True = The card is not blacklisted; False = The card is blacklisted
+     */
+    static isCardBlacklisted(card) {
+        const blacklist = ["565ffdd1db3eb0a207da2941"]
+        return !blacklist.indexOf(card.idBoard) >= 0
+    }
+
+    /**
      * Returns an Array of unique Board ID's from an Array of card Objects
      * @param {Object[]} cardsArray
      * @returns {string[]} An Array of unique Board ID's

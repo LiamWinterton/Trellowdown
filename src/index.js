@@ -29,6 +29,7 @@ const trellowdown = new Trellowdown()
                 // Remove any unarchived cards and make sure all cards have user attached
                 cards = TrelloCard.filterByClosed(cards)
                 cards = TrelloCard.filterByUserID(cards, id)
+                cards = TrelloCard.filterByBoardBlacklist(cards)
 
                 // Setup the structure to be used in the App
                 let ids = TrelloCard.extractIdsFromCards(cards)
