@@ -38,10 +38,12 @@ const trellowdown = new Trellowdown()
                 let boards = TrelloBoard.addCards(emptyBoards, cards)
                 let finishedBoards = TrelloBoard.addBoardNames(boards)
 
+                // Once the list of boards is finished, sort and display mother flipper!
                 finishedBoards.then(boards => {
                     let sorted = TrelloBoard.sortBoards(boards)
                     jQuery("#app").html(Trellowdown.generateHTML(sorted))
                     
+                    // Add some click events to buttons and such
                     addEvents()
                 })
             })

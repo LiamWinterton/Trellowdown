@@ -5,6 +5,10 @@ import { TrelloBoard } from './Trello/TrelloBoard'
 const axios = require('axios')
 
 export class Trellowdown {
+    /**
+     * Authorize a trello user, and get the result in a Promise
+     * @returns {Promise} A promise, with the bool of whether the user is authorized or not.
+     */
     auth() {
         return new Promise(resolve => {
             Trello.authorize({
@@ -23,14 +27,24 @@ export class Trellowdown {
         })
     }
 
+    /**
+     * Function to run when trello has successfully authorized the user
+     */
     authSuccess() {
         
     }
 
+    /**
+     * Function to run when trello has unsuccessfully authorized the user
+     */
     authFailure() {
         throw new Error("Failed auth")
     }
 
+    /**
+     * Returns an Array of Cards from the Trello API that the user is a member of
+     * @returns {Object[]}
+     */
     static getUserCards() {
         return new Promise(resolve => {
             Trello.get(`members/me/cards`).then(data => {
@@ -39,6 +53,10 @@ export class Trellowdown {
         })
     }
 
+    /**
+     * Get the current users ID
+     * @returns {number} The user's ID
+     */
     static getUserID() {
         return new Promise(resolve => {
             Trello.get(`members/me`).then(data => {
@@ -47,6 +65,11 @@ export class Trellowdown {
         })
     }
 
+    /**
+     * Takes an Array of boards, and returns the front end HTML to display
+     * @param {Object[]} boards 
+     * @returns {string} HTML to be outputted
+     */
     static generateHTML(boards) {
         let html = '<div class="trellowdown">'
 
