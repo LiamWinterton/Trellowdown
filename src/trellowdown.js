@@ -6,39 +6,23 @@ const axios = require('axios')
 
 export class Trellowdown {
     /**
-     * Authorize a trello user, and get the result in a Promise
+     * Authorize a trello user, and start this partay!
      * @returns {Promise} A promise, with the bool of whether the user is authorized or not.
      */
-    auth() {
-        return new Promise(resolve => {
-            Trello.authorize({
-                type: 'popup',
-                name: 'Trellowdown',
-                scope: {
-                    read: 'true',
-                    write: 'true'
-                },
-                expiration: 'never',
-                success: this.authSuccess,
-                error: this.authFailure
-            })
-
-            resolve(Trello.authorized)
+    run() {
+        Trello.authorize({
+            type: 'popup',
+            name: 'Trellowdown',
+            scope: {
+                read: 'true',
+                write: 'true'
+            },
+            expiration: 'never',
+            success: this.authSuccess,
+            error: this.authFailure
         })
-    }
 
-    /**
-     * Function to run when trello has successfully authorized the user
-     */
-    authSuccess() {
-        
-    }
-
-    /**
-     * Function to run when trello has unsuccessfully authorized the user
-     */
-    authFailure() {
-        throw new Error("Failed auth")
+        resolve(Trello.authorized)
     }
 
     /**
@@ -90,5 +74,55 @@ export class Trellowdown {
         html += '</div>'
 
         return html
+    }
+
+    /**
+     * Function to run when trello has successfully authorized the user
+     */
+    authSuccess() {
+        const userCards = Trellowdown.getUserCards()
+        const userID = Trellowdown.getUserID()
+        const OllyID = "5452114aee1bdab3526e47e1"
+        
+        // Get all the users cards and the user ID, then
+        Promise.all([userCards, userID]).then(data => {
+            const id = data[1]
+            const OllyID = "5452114aee1bdab3526e47e1"
+        
+            const addEvents = () => {
+                TrelloCard.handleCardFlag(id)
+            }
+        
+            let cards = data[0]
+        
+            // Remove any unarchived cards and make sure all cards have user attached
+            cards = TrelloCard.filterByClosed(cards)
+            cards = TrelloCard.filterByUserID(cards, id)
+            cards = TrelloCard.filterByBoardBlacklist(cards)
+        
+            // Setup the structure to be used in the App
+            let ids = TrelloCard.extractIdsFromCards(cards)
+            let emptyBoards = TrelloBoard.generateStructure(ids)
+        
+            // Add in the cards to each board
+            let boards = TrelloBoard.addCards(emptyBoards, cards)
+            let finishedBoards = TrelloBoard.addBoardNames(boards)
+        
+            // Once the list of boards is finished, sort and display mother flipper!
+            finishedBoards.then(boards => {
+                let sorted = TrelloBoard.sortBoards(boards)
+                jQuery("#app").html(Trellowdown.generateHTML(sorted))
+
+                // Add some click events to buttons and such
+                addEvents()
+            })
+        })
+    }
+
+    /**
+     * Function to run when trello has unsuccessfully authorized the user
+     */
+    authFailure() {
+        throw new Error("Failed auth")
     }
 }
