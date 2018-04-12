@@ -34,7 +34,7 @@ export class TrelloCard {
      */
     static isCardBlacklisted(card) {
         const blacklist = ["565ffdd1db3eb0a207da2941"]
-        return !blacklist.indexOf(card.idBoard) >= 0
+        return blacklist.indexOf(card.idBoard)
     }
 
     /**

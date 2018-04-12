@@ -21,8 +21,6 @@ export class Trellowdown {
             success: this.authSuccess,
             error: this.authFailure
         })
-
-        resolve(Trello.authorized)
     }
 
     /**
