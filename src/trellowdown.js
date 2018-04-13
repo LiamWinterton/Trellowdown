@@ -35,6 +35,14 @@ export class Trellowdown {
         })
     }
 
+    static getUserBoards() {
+        return new Promise(resolve => {
+            Trello.get(`members/me/boards`).then(data => {
+                resolve(data)
+            })
+        })
+    }
+
     /**
      * Get the current users ID
      * @returns {number} The user's ID
@@ -60,7 +68,7 @@ export class Trellowdown {
             let boardDate = new Date(1000 * parseInt(boardTimestamp, 16));
 
             html += `<div class="board" id="${board.id}" data-date="${boardDate.getTime()}">`
-                html += `<h2>${board.name}</h2>`
+                html += `<a href="${board.url}"><h2>${board.name}</h2></a>`
                 html += '<div class="content">'
 
                     board.cards.forEach(card => html += TrelloCard.generateCardHTML(card))
@@ -89,6 +97,7 @@ export class Trellowdown {
         
             const addEvents = () => {
                 TrelloCard.handleCardFlag(id)
+                TrelloCard.handleComment()
             }
         
             let cards = data[0]

@@ -21,12 +21,21 @@ $card-padding: $gutter-small
         height: 100%
 
     .actions
-        +grid(2)
         bottom: $card-padding
         left: $card-padding
 
-        .button
-            padding: $gutter-small
+        .comment
+            display: flex
+
+            textarea + .button
+                border-top-left-radius: 0
+                border-bottom-left-radius: 0
+
+    .buttons
+        +grid(2)
+
+    .button
+        padding: $gutter-small
 
     .overlay
         position: absolute

@@ -20,6 +20,7 @@ export class TrelloBoard {
             const added = newBoards.map(board => {
                 return Trello.get(`boards/${board.id}`).then(data => {
                     board.name = data.name
+                    board.url = data.url
                 })
             })
 

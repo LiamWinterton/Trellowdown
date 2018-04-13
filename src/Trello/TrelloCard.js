@@ -105,6 +105,24 @@ export class TrelloCard {
         })
     }
 
+    static handleComment() {
+        jQuery("#app .trellowdown .board .card").each((index, card) => {
+            const commentButton = jQuery(card).find('.actions .comment .comment-button')
+
+            jQuery(commentButton).on('click', event => {
+                const cardID = jQuery(card).attr('id')
+                const textarea = jQuery(card).find('.comment textarea')
+                const comment = jQuery(textarea).val()
+
+                if(comment !== '') {
+                    Trello.post(`cards/${cardID}/actions/comments`, { text: comment }).then(() => {
+                        jQuery(textarea).val('');
+                    })
+                }
+            })
+        })
+    }
+
     /**
      * Generates the HTML for a given card.
      * @param {Object} card {Object} - The Card object
@@ -122,12 +140,20 @@ export class TrelloCard {
             html += '<div class="more-info">'
                 html += '<ul>'
                     html += `<li>Created: ${readable}</li>`
-                    // html += `<li>Members: ${card.idMembers}</li>`
+                    if(card.desc !== '') {
+                        html += `<li>Description: ${card.desc}</li>`
+                    }
                 html += '</ul>'
             html += '</div>'
-            
+
             html += '<div class="buttons">'
-                html += `<a class="button button-secondary flag-as-done">Flag as done</a>`
+                html += '<div class="actions">'
+                    html += '<div class="comment">'
+                        html += '<textarea name="comment" style="resize: none;"></textarea>'
+                        html += `<a class="button button-primary comment-button">Comment</a>`
+                    html += '</div>'
+                html += '</div>'
+                html += `<a class="button button-secondary flag-as-done">Notify Olly</a>`
             html += '</div>'
 
         html += '</div>'
