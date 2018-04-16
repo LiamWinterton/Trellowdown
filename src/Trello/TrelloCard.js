@@ -64,6 +64,17 @@ export class TrelloCard {
     }
 
     /**
+     * Posts a comment to a Trello card, and wipes that comments value.
+     * @param {number} cardID CardID
+     * @param {string} comment Comment to be posted
+     */
+    static postComment(cardID, comment) {
+        return Trello.post(`cards/${cardID}/actions/comments`, { text: comment }).then(() => {
+            jQuery(`.card#${cardID} textarea`).val('');
+        })
+    }
+
+    /**
      * Removes user from a card
      * @param {number} userID ID of the current user
      * @param {number} cardID ID of the card
@@ -91,33 +102,22 @@ export class TrelloCard {
      * Removes yourself from a card via the API, and adds the superuser
      * @param {number} userID The current user ID
      */
-    static handleCardFlag(userID) {
+    static handleCardEvents(userID) {
+        // Button click
         jQuery("#app .trellowdown .board .card").each((index, card) => {
-            const flagButton = jQuery(card).find('.buttons .flag-as-done')
+            const flagButton = jQuery(card).find('.actions .button')
 
             jQuery(flagButton).on('click', event => {
                 const cardID = jQuery(card).attr('id')
-
-                event.preventDefault()
-                this.addOllyToCard(cardID)
-                .then(this.removeFromCard(userID, cardID))
-            })
-        })
-    }
-
-    static handleComment() {
-        jQuery("#app .trellowdown .board .card").each((index, card) => {
-            const commentButton = jQuery(card).find('.actions .comment .comment-button')
-
-            jQuery(commentButton).on('click', event => {
-                const cardID = jQuery(card).attr('id')
-                const textarea = jQuery(card).find('.comment textarea')
-                const comment = jQuery(textarea).val()
+                const comment = jQuery(card).find('textarea').val()
 
                 if(comment !== '') {
-                    Trello.post(`cards/${cardID}/actions/comments`, { text: comment }).then(() => {
-                        jQuery(textarea).val('');
-                    })
+                    this.addOllyToCard(cardID)
+                        .then(this.postComment(cardID, comment))
+                        .then(this.removeFromCard(userID, cardID))
+                } else {
+                    this.addOllyToCard(cardID)
+                        .then(this.removeFromCard(userID, cardID))
                 }
             })
         })
@@ -140,9 +140,6 @@ export class TrelloCard {
             html += '<div class="more-info">'
                 html += '<ul>'
                     html += `<li>Created: ${readable}</li>`
-                    if(card.desc !== '') {
-                        html += `<li>Description: ${card.desc}</li>`
-                    }
                 html += '</ul>'
             html += '</div>'
 
@@ -150,10 +147,9 @@ export class TrelloCard {
                 html += '<div class="actions">'
                     html += '<div class="comment">'
                         html += '<textarea name="comment" style="resize: none;"></textarea>'
-                        html += `<a class="button button-primary comment-button">Comment</a>`
                     html += '</div>'
+                    html += `<a class="button button-secondary">Notify El Número Uno</a>`
                 html += '</div>'
-                html += `<a class="button button-secondary flag-as-done">Notify Olly</a>`
             html += '</div>'
 
         html += '</div>'

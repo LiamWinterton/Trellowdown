@@ -68,7 +68,7 @@ export class Trellowdown {
             let boardDate = new Date(1000 * parseInt(boardTimestamp, 16));
 
             html += `<div class="board" id="${board.id}" data-date="${boardDate.getTime()}">`
-                html += `<a href="${board.url}"><h2>${board.name}</h2></a>`
+                html += `<a href="${board.url}" target="_blank"><h2>${board.name}</h2></a>`
                 html += '<div class="content">'
 
                     board.cards.forEach(card => html += TrelloCard.generateCardHTML(card))
@@ -92,19 +92,18 @@ export class Trellowdown {
         
         // Get all the users cards and the user ID, then
         Promise.all([userCards, userID]).then(data => {
-            const id = data[1]
+            const myID = data[1]
             const OllyID = "5452114aee1bdab3526e47e1"
         
             const addEvents = () => {
-                TrelloCard.handleCardFlag(id)
-                TrelloCard.handleComment()
+                TrelloCard.handleCardEvents(myID)
             }
         
             let cards = data[0]
         
             // Remove any unarchived cards and make sure all cards have user attached
             cards = TrelloCard.filterByClosed(cards)
-            cards = TrelloCard.filterByUserID(cards, id)
+            cards = TrelloCard.filterByUserID(cards, myID)
             cards = TrelloCard.filterByBoardBlacklist(cards)
         
             // Setup the structure to be used in the App
