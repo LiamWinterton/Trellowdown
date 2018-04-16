@@ -1,6 +1,13 @@
 export class TrelloBoard {
     static generateStructure(ids) {
-        let boards = []
+        let boards = [
+            {
+                id: null,
+                lists: [],
+                cards: [],
+                name: "Urgent"
+            }
+        ]
 
         ids.forEach(id => {
             boards.push({
@@ -18,10 +25,12 @@ export class TrelloBoard {
             let newBoards = [ ...boards ]
 
             const added = newBoards.map(board => {
-                return Trello.get(`boards/${board.id}`).then(data => {
-                    board.name = data.name
-                    board.url = data.url
-                })
+                if(board.id !== null) {
+                    return Trello.get(`boards/${board.id}`).then(data => {
+                        board.name = data.name
+                        board.url = data.url
+                    })
+                }
             })
 
             Promise.all(added).then(() => {
@@ -32,6 +41,7 @@ export class TrelloBoard {
 
     static addCards(emptyBoards, cards) {
         let newBoards = [ ...emptyBoards ]
+        console.log(newBoards)
 
         // Loop over each board
         newBoards.forEach(board => {

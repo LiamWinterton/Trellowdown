@@ -64,10 +64,14 @@ export class Trellowdown {
         let html = '<div class="trellowdown">'
 
         boards.forEach(board => {
-            let boardTimestamp = board.id.substring(0, 8)
-            let boardDate = new Date(1000 * parseInt(boardTimestamp, 16));
+            let id = (board.id !== null) ? board.id : "None"
 
-            html += `<div class="board" id="${board.id}" data-date="${boardDate.getTime()}">`
+            if(!id) {
+                let boardTimestamp = board.id.substring(0, 8)
+                let boardDate = new Date(1000 * parseInt(boardTimestamp, 16));
+            }
+
+            html += `<div class="board" id="${id}">`
                 html += `<a href="${board.url}" target="_blank"><h2>${board.name}</h2></a>`
                 html += '<div class="content">'
 
