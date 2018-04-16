@@ -134,12 +134,21 @@ export class TrelloCard {
         let readable = `${cardDate.getDate()}/${cardDate.getMonth() + 1}/${cardDate.getFullYear()}`
         let html = ''
 
-        html += `<div class="card" id="${card.id}" data-date="${cardDate.getTime()}">`
-            html += `<h3><a href="${card.url}" target="_blank">${card.name}</a></h3>`
+        let dueDate = (card.due !== null) ? new Date(Date.parse(card.due)) : false
+        let overdue = (dueDate) ? (new Date().getTime() - dueDate.getTime() >= 0) : false
 
+        html += `<div class="card" id="${card.id}" data-date="${cardDate.getTime()}">`
+            html += `<div class="title">`
+                html += `<h3><a href="${card.url}" target="_blank">${card.name}</a></h3>`
+                if(overdue) html += `<div class="overdue red"></div>`
+            html += `</div>`
+            
             html += '<div class="more-info">'
                 html += '<ul>'
                     html += `<li>Created: ${readable}</li>`
+                    if(dueDate) {
+                        html += `<li>Due: ${dueDate.toLocaleString()}</li>`
+                    }
                 html += '</ul>'
             html += '</div>'
 
