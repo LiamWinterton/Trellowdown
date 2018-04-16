@@ -140,6 +140,9 @@ export class TrelloCard {
             html += '<div class="more-info">'
                 html += '<ul>'
                     html += `<li>Created: ${readable}</li>`
+                    if(card.due !== null) {
+                        html += `<li>${Date(card.due)}</li>`
+                    }
                 html += '</ul>'
             html += '</div>'
 

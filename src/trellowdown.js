@@ -64,9 +64,9 @@ export class Trellowdown {
         let html = '<div class="trellowdown">'
 
         boards.forEach(board => {
-            let id = (board.id !== null) ? board.id : "None"
+            let id = (board.id !== null) ? board.id : "none"
 
-            if(!id) {
+            if(id !== "none") {
                 let boardTimestamp = board.id.substring(0, 8)
                 let boardDate = new Date(1000 * parseInt(boardTimestamp, 16));
             }
