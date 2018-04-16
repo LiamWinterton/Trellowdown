@@ -157,7 +157,7 @@ export class TrelloCard {
                     html += '<div class="comment">'
                         html += '<textarea name="comment" style="resize: none;"></textarea>'
                     html += '</div>'
-                    html += `<a class="button button-secondary">Notify El Número Uno</a>`
+                    html += `<a class="button button-secondary">Notify</a>`
                 html += '</div>'
             html += '</div>'
 
