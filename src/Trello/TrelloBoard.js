@@ -41,25 +41,15 @@ export class TrelloBoard {
 
     static addCards(emptyBoards, cards) {
         let newBoards = [ ...emptyBoards ]
+        let urgentCards = []
 
         // Loop over each board
         newBoards.forEach(board => {
             let matches = cards.filter(card => (card.idBoard == board.id))
             let urgentMatches = matches.filter(card => (card.due !== null && card.dueComplete == false))
 
-            // Sort urgentMatches by due date
-            urgentMatches = urgentMatches.sort((a, b) => {
-                let aDate = new Date(a.due)
-                let aTime = aDate.getTime()
-
-                let bDate = new Date(b.due)
-                let bTime = bDate.getTime()
-
-                return aTime - bTime
-            })
-
             urgentMatches.forEach(card => {
-                newBoards[0].cards.push(card)
+                urgentCards.push(card)
             })
 
             // Then do the same for non urgent cards
@@ -88,6 +78,18 @@ export class TrelloBoard {
             listIds.map(id => {
                 board.lists.push(id)
             })
+        })
+
+        // Sort urgentMatches by due date
+        urgentCards = urgentCards.sort((a, b) => {
+            let aTime = Date.parse(a.due)
+            let bTime = Date.parse(b.due)
+
+            return aTime - bTime
+        })
+
+        urgentCards.forEach(card => {
+            newBoards[0].cards.push(card)
         })
         
         return newBoards
