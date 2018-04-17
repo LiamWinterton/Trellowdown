@@ -5,7 +5,7 @@ export class TrelloBoard {
                 id: null,
                 lists: [],
                 cards: [],
-                name: "Urgent"
+                name: "Priority"
             }
         ]
 
@@ -41,18 +41,18 @@ export class TrelloBoard {
 
     static addCards(emptyBoards, cards) {
         let newBoards = [ ...emptyBoards ]
-        let urgentCards = []
+        let priorityCards = []
 
         // Loop over each board
         newBoards.forEach(board => {
             let matches = cards.filter(card => (card.idBoard == board.id))
-            let urgentMatches = matches.filter(card => (card.due !== null && card.dueComplete == false))
+            let priorityMatches = matches.filter(card => (card.due !== null && card.dueComplete == false))
 
-            urgentMatches.forEach(card => {
-                urgentCards.push(card)
+            priorityMatches.forEach(card => {
+                priorityCards.push(card)
             })
 
-            // Then do the same for non urgent cards
+            // Then do the same for non priority cards
             let normalMatches = matches.filter(card => (card.due == null))
 
             // Sort matched cards by date created
@@ -80,15 +80,15 @@ export class TrelloBoard {
             })
         })
 
-        // Sort urgentMatches by due date
-        urgentCards = urgentCards.sort((a, b) => {
+        // Sort priorityMatches by due date
+        priorityCards = priorityCards.sort((a, b) => {
             let aTime = Date.parse(a.due)
             let bTime = Date.parse(b.due)
 
             return aTime - bTime
         })
 
-        urgentCards.forEach(card => {
+        priorityCards.forEach(card => {
             newBoards[0].cards.push(card)
         })
         
@@ -101,8 +101,8 @@ export class TrelloBoard {
         // Remove boards with no cards
         newBoards = newBoards.filter(board => (board.cards.length !== 0))
 
-        // Take out the Urgent board before sorting
-        let urgentBoard = newBoards.splice(0, 1)
+        // Take out the priority board before sorting
+        let priorityBoard = newBoards.splice(0, 1)
 
         newBoards.sort((a, b) => {
             const aName = a.name.toUpperCase()
@@ -111,8 +111,8 @@ export class TrelloBoard {
             return (aName > bName) ? 1 : -1
         })
 
-        // Add urgent back in, but at the beginning
-        newBoards.unshift(urgentBoard[0])
+        // Add priority back in, but at the beginning
+        newBoards.unshift(priorityBoard[0])
 
         return newBoards
     }
