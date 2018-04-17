@@ -80,11 +80,9 @@ export class TrelloCard {
      * @param {number} cardID ID of the card
      */
     static removeFromCard(userID, cardID) {
-        const removeURL = `cards/${cardID}/idMembers/${userID}`
-
         jQuery(`#${cardID}`).css({ opacity: 0.7 })
 
-        Trello.delete(removeURL, { idMember: userID }).then(() => this.removeCard(cardID))
+        Trello.delete(`cards/${cardID}/idMembers/${userID}`, { idMember: userID }).then(() => this.removeCard(cardID))
     }
 
     /**
@@ -92,10 +90,7 @@ export class TrelloCard {
      * @param {number} cardID ID of the card
      */
     static addOllyToCard(cardID) {
-        const addURL = `cards/${cardID}/idMembers`
-        const OllyID = "5452114aee1bdab3526e47e1"
-
-        return Trello.post(addURL, { value: OllyID })
+        return Trello.post(`cards/${cardID}/idMembers`, { value: "5452114aee1bdab3526e47e1" })
     }
 
     /**
@@ -123,44 +118,66 @@ export class TrelloCard {
         })
     }
 
+    static getCardTitleHTML(card, overdue=false) {
+        let html = ``
+
+        html = `<div class="title">`
+            html += `<h3><a href="${card.url}" target="_blank">${card.name}</a></h3>`
+            if(overdue) {
+                html += `<div class="overdue red"></div>`
+            }
+        html += `</div>`
+
+        return html
+    }
+
+    static getCardInfoHTML(card, dueDate=false) {
+        let html = ``
+        let cardTimestamp = card.id.substring(0, 8)
+        let cardDate = new Date(1000 * parseInt(cardTimestamp, 16));
+        let readable = `${cardDate.getDate()}/${cardDate.getMonth() + 1}/${cardDate.getFullYear()}`
+
+        html += '<div class="more-info">'
+            html += '<ul>'
+                html += `<li>Created: ${readable}</li>`
+                if(dueDate) {
+                    html += `<li>Due: ${dueDate.toLocaleString()}</li>`
+                }
+            html += '</ul>'
+        html += '</div>'
+
+        return html
+    }
+
+    static getCardButtonsHTML() {
+        let html = ``
+        html += '<div class="buttons">'
+            html += '<div class="actions">'
+                html += '<div class="comment">'
+                    html += '<textarea name="comment" style="resize: none;"></textarea>'
+                html += '</div>'
+                html += `<a class="button button-secondary">Notify</a>`
+            html += '</div>'
+        html += '</div>'
+
+        return html
+    }
+    
     /**
      * Generates the HTML for a given card.
      * @param {Object} card {Object} - The Card object
      * @returns {string} A div.card containing all the relevent card information
      */
     static generateCardHTML(card) {
-        let cardTimestamp = card.id.substring(0, 8)
-        let cardDate = new Date(1000 * parseInt(cardTimestamp, 16));
-        let readable = `${cardDate.getDate()}/${cardDate.getMonth() + 1}/${cardDate.getFullYear()}`
         let html = ''
 
         let dueDate = (card.due !== null) ? new Date(Date.parse(card.due)) : false
         let overdue = (dueDate) ? (new Date().getTime() - dueDate.getTime() >= 0) : false
 
-        html += `<div class="card" id="${card.id}" data-date="${cardDate.getTime()}">`
-            html += `<div class="title">`
-                html += `<h3><a href="${card.url}" target="_blank">${card.name}</a></h3>`
-                if(overdue) html += `<div class="overdue red"></div>`
-            html += `</div>`
-            
-            html += '<div class="more-info">'
-                html += '<ul>'
-                    html += `<li>Created: ${readable}</li>`
-                    if(dueDate) {
-                        html += `<li>Due: ${dueDate.toLocaleString()}</li>`
-                    }
-                html += '</ul>'
-            html += '</div>'
-
-            html += '<div class="buttons">'
-                html += '<div class="actions">'
-                    html += '<div class="comment">'
-                        html += '<textarea name="comment" style="resize: none;"></textarea>'
-                    html += '</div>'
-                    html += `<a class="button button-secondary">Notify</a>`
-                html += '</div>'
-            html += '</div>'
-
+        html += `<div class="card" id="${card.id}">`
+            html += this.getCardTitleHTML(card, overdue)
+            html += this.getCardInfoHTML(card, dueDate)
+            html += this.getCardButtonsHTML()
         html += '</div>'
 
         return html
