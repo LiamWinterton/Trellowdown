@@ -65,19 +65,23 @@ export class Trellowdown {
 
         boards.forEach(board => {
             let id = (board.id !== null) ? board.id : "none"
+            let classes = ["board"]
 
-            if(id !== "none") {
-                let boardTimestamp = board.id.substring(0, 8)
-                let boardDate = new Date(1000 * parseInt(boardTimestamp, 16));
+            if(id == "none") {
+                classes.push("break")
             }
 
-            html += `<div class="board" id="${id}">`
+            html += `<div class="${classes.join(' ')}" id="${id}">`
+                if(id == 'none') html += `<div class="container">`
+
                 html += `<a href="${board.url}" target="_blank"><h2>${board.name}</h2></a>`
                 html += '<div class="content">'
 
                     board.cards.forEach(card => html += TrelloCard.generateCardHTML(card))
 
                 html += '</div>'
+
+                if(id == 'none') html += `</div>`
             html += '</div>'
         })
 

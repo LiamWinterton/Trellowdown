@@ -5,9 +5,8 @@ import { TrelloCard } from './Trello/TrelloCard'
 import { TrelloBoard } from './Trello/TrelloBoard'
 
 jQuery(document).ready(function() {
+    // Base code
+    const trellowdown = new Trellowdown()
 
-// Base code
-const trellowdown = new Trellowdown()
-
-trellowdown.run()
+    trellowdown.run()
 })
