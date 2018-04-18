@@ -77,7 +77,7 @@ export class Trellowdown {
                 html += `<a href="${board.url}" target="_blank"><h2>${board.name}</h2></a>`
                 html += '<div class="content">'
 
-                    board.cards.forEach(card => html += TrelloCard.generateCardHTML(card))
+                    board.cards.forEach(card => html += TrelloCard.generateCardHTML(card, board))
 
                 html += '</div>'
 
@@ -102,7 +102,7 @@ export class Trellowdown {
         Promise.all([userCards, userID]).then(data => {
             const myID = data[1]
             const OllyID = "5452114aee1bdab3526e47e1"
-        
+
             const addEvents = () => {
                 TrelloCard.handleCardEvents(myID)
             }
