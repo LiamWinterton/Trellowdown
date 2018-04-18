@@ -30,6 +30,12 @@ export class TrelloBoard {
                         board.name = data.name
                         board.url = data.url
                     })
+                } else {
+                    board.cards.map(card => {
+                        return Trello.get(`boards/${card.idBoard}`).then(data => {
+                            card.boardName = data.name
+                        })
+                    })
                 }
             })
 
