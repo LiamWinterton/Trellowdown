@@ -122,7 +122,12 @@ export class TrelloCard {
         let html = ``
 
         html = `<div class="title">`
-            html += `<h3><a href="${card.url}" target="_blank">${card.name}</a></h3>`
+            if(card.boardName) {
+                html += `<h3><a href="${card.url}" target="_blank">${card.boardName} - ${card.name}</a></h3>`
+            } else {
+                html += `<h3><a href="${card.url}" target="_blank">${card.name}</a></h3>`
+            }
+
             if(overdue) {
                 html += `<div class="overdue red"></div>`
             }

@@ -3,10 +3,14 @@
     justify-content: space-between
     flex-direction: column
     border: 1px solid #dddddd
-    box-shadow: 0 2px 2px #cccccc
+    box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
     border-radius: 2px
     background: #f8f8f8
     color: #343434
+    +defaultTransition
+
+    &:hover
+        box-shadow: 0 3px 6px rgba(0,0,0,0.30), 0 3px 6px rgba(0,0,0,0.35);
 
     & > *
         padding: $gutter-small
@@ -23,6 +27,12 @@
 
             &.red
                 background: #F44336
+
+            &.yellow
+                background: #FFEB3B
+
+            &.orange
+                background: #FF9800
 
     .actions
         +grid(2)
