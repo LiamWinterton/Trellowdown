@@ -1,3 +1,5 @@
+import { dateHelper } from '../date'
+
 export class TrelloCard {
     /**
      * Filters a list of boards by whether the board is closed or not
@@ -118,7 +120,7 @@ export class TrelloCard {
         })
     }
 
-    static getCardTitleHTML(card, overdue=false) {
+    static getCardTitleHTML(card, dueDate = false) {
         let html = ``
 
         html = `<div class="title">`
@@ -128,8 +130,19 @@ export class TrelloCard {
                 html += `<h3><a href="${card.url}" target="_blank">${card.name}</a></h3>`
             }
 
-            if(overdue) {
-                html += `<div class="overdue red"></div>`
+            if(dueDate) {
+                let difference = dateHelper.daysBetween(dueDate)
+                let classColor = ""
+
+                if(difference < 0) {
+                    classColor = "red"
+                } else if(difference == 0) {
+                    classColor = "orange"
+                } else if(difference > 0 && difference < 4) {
+                    classColor = "yellow"
+                }
+
+                html += `<div class="overdue ${classColor}"></div>`
             }
         html += `</div>`
 
@@ -137,21 +150,29 @@ export class TrelloCard {
     }
 
     static getCardInfoHTML(card, dueDate=false) {
-        let html = ``
-        let cardTimestamp = card.id.substring(0, 8)
-        let cardDate = new Date(1000 * parseInt(cardTimestamp, 16));
-        let readable = `${cardDate.getDate()}/${cardDate.getMonth() + 1}/${cardDate.getFullYear()}`
+        if(dueDate) {
+            let html = ``
+            let difference = dateHelper.daysBetween(dueDate)
+            let response = ""
 
-        html += '<div class="more-info">'
-            html += '<ul>'
-                html += `<li>Created: ${readable}</li>`
-                if(dueDate) {
-                    html += `<li>Due: ${dueDate.toLocaleString()}</li>`
-                }
-            html += '</ul>'
-        html += '</div>'
+            if(difference < 0) {
+                response = `Overdue by ${Math.abs(difference)} day(s)!`
+            } else if(difference == 0) {
+                response = `Due Today`
+            } else if(difference > 0) {
+                response = `Due in ${Math.abs(difference)} day(s)!`
+            }
 
-        return html
+            html += '<div class="more-info">'
+                html += '<ul>'
+                    html += `<li>Due in: ${response}</li>`
+                html += '</ul>'
+            html += '</div>'
+
+            return html
+        } else {
+            return ""
+        }
     }
 
     static getCardButtonsHTML() {
@@ -180,7 +201,7 @@ export class TrelloCard {
         let overdue = (dueDate) ? (new Date().getTime() - dueDate.getTime() >= 0) : false
 
         html += `<div class="card" id="${card.id}">`
-            html += this.getCardTitleHTML(card, overdue)
+            html += this.getCardTitleHTML(card, dueDate)
             html += this.getCardInfoHTML(card, dueDate)
             html += this.getCardButtonsHTML()
         html += '</div>'
