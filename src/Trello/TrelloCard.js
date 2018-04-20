@@ -158,14 +158,14 @@ export class TrelloCard {
             if(difference < 0) {
                 response = `Overdue by ${Math.abs(difference)} day(s)!`
             } else if(difference == 0) {
-                response = `Due Today`
+                response = `Due in Today`
             } else if(difference > 0) {
                 response = `Due in ${Math.abs(difference)} day(s)!`
             }
 
             html += '<div class="more-info">'
                 html += '<ul>'
-                    html += `<li>Due in: ${response}</li>`
+                    html += `<li>${response}</li>`
                 html += '</ul>'
             html += '</div>'
 
