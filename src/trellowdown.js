@@ -61,7 +61,9 @@ export class Trellowdown {
      * @returns {string} HTML to be outputted
      */
     static generateHTML(boards) {
-        let html = '<div class="trellowdown">'
+        let html = this.generateMenuHTML(boards)
+
+        html += '<div class="trellowdown">'
 
         boards.forEach(board => {
             let id = (board.id !== null) ? board.id : "none"
@@ -86,6 +88,28 @@ export class Trellowdown {
         })
 
         html += '</div>'
+
+        return html
+    }
+
+    static generateMenuHTML(boards) {
+        let html = ""
+
+        html += `<div class="trellowdown-menu">`
+
+            boards.forEach(board => {
+                html += `<div class="menu-item">`
+
+                if(board.id == null) {
+                    html += `<a href="#none">${board.name}</a>`
+                } else {
+                    html += `<a href="#${board.id}">${board.name}</a>`
+                }
+                
+                html += `</div>`
+            })
+
+        html += `</div>`
 
         return html
     }
