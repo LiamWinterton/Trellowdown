@@ -1,6 +1,15 @@
 import { dateHelper } from '../date'
+import { TrelloBoard } from './TrelloBoard'
 
 export class TrelloCard {
+    /**
+     * Returns a promise containing the Trello card
+     * @param {number} cardID 
+     */
+    static getCard(cardID) {
+        return Trello.get(`cards/${cardID}`)
+    }
+
     /**
      * Filters a list of boards by whether the board is closed or not
      * @param {Object[]} cardsArray 
@@ -88,11 +97,25 @@ export class TrelloCard {
     }
 
     /**
-     * Adds superuser to the card
-     * @param {number} cardID ID of the card
+     * Adds a user to a board, adding that user to the board if they are not already.
+     * @param {number} memberID ID of the user you wish to add
+     * @param {number} cardID ID of the card you wish to add the user to
+     * @param {number} boardID The board that the card belongs to
      */
-    static addOllyToCard(cardID) {
-        return Trello.post(`cards/${cardID}/idMembers`, { value: "5452114aee1bdab3526e47e1" })
+    static addMemberToCard(memberID, cardID, boardID) {
+        return new Promise((resolve, reject) => {
+            TrelloBoard.isMemberOnBoard(memberID, boardID).then(onBoard => {
+                const requirements = new Promise(resolve => {
+                    if(!onBoard) {
+                        resolve(TrelloBoard.addToBoard(memberID, boardID))
+                    } else {
+                        resolve(true)
+                    }
+                })
+
+                requirements.then(() => resolve( Trello.post(`cards/${cardID}/idMembers`, { value: memberID }) ))
+            })
+        })
     }
 
     /**
@@ -104,23 +127,30 @@ export class TrelloCard {
         jQuery("#app .trellowdown .board .card").each((index, card) => {
             const flagButton = jQuery(card).find('.actions .button')
 
+            // On click
             jQuery(flagButton).on('click', event => {
                 const cardID = jQuery(card).attr('id')
                 const comment = jQuery(card).find('textarea').val()
+                const boardID = jQuery(card).parents('.board').attr('id')
 
                 if(comment !== '') {
-                    this.addOllyToCard(cardID)
+                    this.addMemberToCard("5452114aee1bdab3526e47e1", cardID, boardID)
                         .then(this.postComment(cardID, comment))
                         .then(this.removeFromCard(userID, cardID))
                 } else {
-                    this.addOllyToCard(cardID)
+                    this.addMemberToCard("5452114aee1bdab3526e47e1", cardID, boardID)
                         .then(this.removeFromCard(userID, cardID))
                 }
             })
         })
     }
 
-    static getCardTitleHTML(card, dueDate = false) {
+    /**
+     * Gets the title div for the card HTML
+     * @param {Object} card The card object to get information from
+     * @param {Date} dueDate 
+     */
+    static getCardTitleHTML(card, dueDate=false) {
         let html = ``
 
         html = `<div class="title">`
@@ -149,6 +179,11 @@ export class TrelloCard {
         return html
     }
 
+    /**
+     * Gets the Info div for the card HTML
+     * @param {Object} card The card object to get information from
+     * @param {Date} dueDate
+     */
     static getCardInfoHTML(card, dueDate=false) {
         if(dueDate) {
             let html = ``
@@ -175,6 +210,9 @@ export class TrelloCard {
         }
     }
 
+    /**
+     * Gets the buttons div for the card HTML
+     */
     static getCardButtonsHTML() {
         let html = ``
         html += '<div class="buttons">'

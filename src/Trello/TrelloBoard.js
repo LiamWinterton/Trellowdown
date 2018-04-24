@@ -1,4 +1,8 @@
 export class TrelloBoard {
+    /**
+     * Generates the initial boards Object that the project uses as a foundation
+     * @param {number[]} ids 
+     */
     static generateStructure(ids) {
         let boards = [
             {
@@ -20,6 +24,20 @@ export class TrelloBoard {
         return boards
     }
 
+    /**
+     * Adds
+     * @param {number} memberID ID of the user
+     * @param {number} boardID ID of the board
+     * @param {string} userType Default: admin
+     */
+    static addToBoard(memberID, boardID, userType="admin") {
+        return Trello.put(`boards/${boardID}/members/${memberID}`, { type: userType })
+    }
+
+    /**
+     * Takes an array of boards, and adds the name of that board
+     * @param {Object[]} boards 
+     */
     static addBoardNames(boards) {
         return new Promise(resolve => {
             let newBoards = [ ...boards ]
@@ -45,6 +63,11 @@ export class TrelloBoard {
         })
     }
 
+    /**
+     * Takes empty Boards structure and adds cards in to the appropriate board array.
+     * @param {Object[]} emptyBoards 
+     * @param {Object[]} cards 
+     */
     static addCards(emptyBoards, cards) {
         let newBoards = [ ...emptyBoards ]
         let priorityCards = []
@@ -101,6 +124,10 @@ export class TrelloBoard {
         return newBoards
     }
 
+    /**
+     * Sorts the boards based on board name (excludes priority board)
+     * @param {Objects[]} boards 
+     */
     static sortBoards(boards) {
         let newBoards = [ ...boards ]
 
@@ -121,5 +148,28 @@ export class TrelloBoard {
         newBoards.unshift(priorityBoard[0])
 
         return newBoards
+    }
+
+    /**
+     * Determines whether a user is a member of a board
+     * @param {number} memberID 
+     * @param {number} boardID
+     * @returns {boolean}
+     */
+    static isMemberOnBoard(memberID, boardID) {
+        return new Promise((resolve, reject) => {
+            const getBoardMembers = Trello.get(`boards/${boardID}/members`)
+
+            getBoardMembers.then(memArray => {
+                const member = memArray.find(member => member.id == memberID)
+
+                if(member) {
+                    resolve(true)
+                }
+                else {
+                    resolve(false)
+                }
+            })
+        })
     }
 }
