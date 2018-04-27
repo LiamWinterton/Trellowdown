@@ -1,12 +1,23 @@
-# ES6 - Boilerplate
+# Trellowdown
 
-I'm not sure how this works cross platform, but this works for me on my windows dev machine at work. Fairly new to webpack and npm so don't expect a lot in terms of updates. It works for me and that is it's only intended use currently.
+    Trellodown is an interface for Trello that enables users to see priority tasks, and cards they are assigned to in one managable space.
 
-## Commands
+## Our issue
 
-* npm run build - Runs the webpack dev server
-* npm run build - Runs webpack for production.
+    Here at Dijitul, we use Trello every day. But one little annoyance we had was being able to fully implement Trello into our processes.
 
-## Wishlist / To Do
+    Whilst the `/username/cards` view is by no means bad, there are some features and functionality we wanted to jam into the page in order to get the most out of it.
 
-* Nicer looking basic template, maybe some bootstrap.
+    There are two main things that we wanted out of the page. Those being:
+
+    * The ability to flag a card as `complete`.
+    * Be able to quickly cards assigned to us that had due dates.
+
+    Thus, Trellowdown was created.
+
+## Dev
+
+### Commands
+
+    * npm run build - Runs the webpack dev server
+    * npm run build - Runs webpack for production.
