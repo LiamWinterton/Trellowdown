@@ -52,12 +52,18 @@ export class QuickAdd {
         const boardID = this.getSelectedBoardID()
         const listID = this.getSelectedListID()
 
-        TrelloCard.createCard({
+        const card = {
             name: this.getCardTitle(),
             desc: this.getCardDescription(),
             pos: "top",
             idList: this.getSelectedListID(),
-        }).then(() => {
+        }
+
+        if(jQuery("input[name=selected-member]:checked", "#quick-add").val()) {
+            card.idMembers = jQuery("input[name=selected-member]:checked", "#quick-add").val()
+        }
+
+        TrelloCard.createCard(card).then(() => {
             this.clearInputs()
         })
     }
@@ -84,7 +90,8 @@ export class QuickAdd {
         html += `<div class="member-icons">`
 
             members.forEach(member => {
-                html += `<div class="member-icon">`
+                html += `<label>`
+                    html += `<input type="radio" name="selected-member" value="${member.id}" class="member-icon" />`
                     
                     if(member.avatarHash !== null && member.avatarHash !== "") {
                         html += `<img src="${member.avatarUrl}/30.png" />`
@@ -92,7 +99,7 @@ export class QuickAdd {
                         html += `<span>${member.initials}</span>`
                     }
 
-                html += `</div>`
+                html += `</label>`
             })
 
         html += `</div>`
