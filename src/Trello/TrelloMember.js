@@ -1,5 +1,9 @@
 export class TrelloMember {
-    static getMembersInOrganisation(organisationID) {
-        return Trello.get(`organizations/${organisationID}/members`)
+    static getMember(id) {
+        return new Promise(resolve => {
+            Trello.get(`members/${id}`).then(member => {
+                resolve(member)
+            })
+        })
     }
 }

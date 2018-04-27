@@ -9,11 +9,13 @@ export class QuickAdd {
         this.handleSelects(boards)
 
         // Add Members icons to organisation
-        // TrelloOrganisation.getCurrentOrganisation()
-        //     .then(id => TrelloOrganisation.getMembers(id))
-        //     .then(members => {
-        //         console.log(members)
-        //     })
+        TrelloOrganisation.getCurrentOrganisation()
+            .then(id => TrelloOrganisation.getMembers(id))
+            .then(members => {
+
+                const membersHTML = this.generateMembersHTML(members)
+                jQuery("header #quick-add .members").append(membersHTML)
+            })
     }
 
     static handleSelects(boards) {
@@ -74,6 +76,28 @@ export class QuickAdd {
                     listSelect.append(`<option value="${list.id}">${list.name}</option>`)
                 })
             })
+    }
+
+    static generateMembersHTML(members) {
+        let html = ""
+
+        html += `<div class="member-icons">`
+
+            members.forEach(member => {
+                html += `<div class="member-icon">`
+                    
+                    if(member.avatarHash !== null && member.avatarHash !== "") {
+                        html += `<img src="${member.avatarUrl}/30.png" />`
+                    } else {
+                        html += `<span>${member.initials}</span>`
+                    }
+
+                html += `</div>`
+            })
+
+        html += `</div>`
+
+        return html
     }
 
     static getCardTitle() {
