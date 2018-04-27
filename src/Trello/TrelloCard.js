@@ -10,6 +10,15 @@ export class TrelloCard {
         return Trello.get(`cards/${cardID}`)
     }
 
+    static createCard(card) {
+        // TODO: Create the card, and add the user seperately to avoid board permission conflicts
+        return new Promise((resolve, reject) => {
+            Trello.post(`cards`, card).then(response => {
+                resolve(response)
+            })
+        })
+    }
+
     /**
      * Filters a list of boards by whether the board is closed or not
      * @param {Object[]} cardsArray 
