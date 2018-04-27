@@ -1,6 +1,7 @@
 import { config } from './config'
 import { TrelloCard } from './Trello/TrelloCard'
 import { TrelloBoard } from './Trello/TrelloBoard'
+import { QuickAdd } from './Trello/QuickAdd'
 
 const axios = require('axios')
 
@@ -150,6 +151,9 @@ export class Trellowdown {
             finishedBoards.then(boards => {
                 let sorted = TrelloBoard.sortBoards(boards)
                 jQuery("#app").html(Trellowdown.generateHTML(sorted))
+
+                // Send boards over to QuickAdd to get that started
+                QuickAdd.setup(sorted)
 
                 // Add some click events to buttons and such
                 addEvents()
