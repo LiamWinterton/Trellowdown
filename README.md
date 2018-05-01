@@ -1,4 +1,4 @@
-# Trellowdown
+# Trellowdown - v1.0.0
 
     Trellodown is an interface for Trello that enables users to see priority tasks, and cards they are assigned to in one managable space.
 
