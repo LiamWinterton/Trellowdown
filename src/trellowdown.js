@@ -30,9 +30,14 @@ export class Trellowdown {
      */
     static getUserCards() {
         return new Promise(resolve => {
-            Trello.get(`members/me/cards`).then(data => {
-                resolve(data)
-            })
+            if(localStorage.getItem("td_user_cards")) {
+                resolve(JSON.parse(localStorage.getItem("td_user_cards")))
+            } else {
+                Trello.get(`members/me/cards`).then(data => {
+                    localStorage.setItem("td_user_cards", JSON.stringify(data))
+                    resolve(data)
+                })
+            }
         })
     }
 
@@ -54,6 +59,16 @@ export class Trellowdown {
                 resolve(data.id)
             })
         })
+    }
+
+    /**
+     * Clears the local storage cache in order to get newly added cards / boards
+     */
+    static clearCache() {
+        localStorage.removeItem("td_organisation_members")
+        localStorage.removeItem("td_user_cards")
+
+        location.reload()
     }
 
     /**

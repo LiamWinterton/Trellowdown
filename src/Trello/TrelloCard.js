@@ -11,10 +11,12 @@ export class TrelloCard {
     }
 
     static createCard(card) {
-        // TODO: Create the card, and add the user seperately to avoid board permission conflicts
         return new Promise((resolve, reject) => {
             Trello.post(`cards`, card).then(response => {
-                resolve(response)
+                if(card.idMembers) {
+                    console.log(card.idMembers, response.id, response.idBoard)
+                    this.addMemberToCard(card.idMembers, response.id, response.idBoard)
+                }
             })
         })
     }
