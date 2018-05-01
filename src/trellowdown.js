@@ -30,14 +30,9 @@ export class Trellowdown {
      */
     static getUserCards() {
         return new Promise(resolve => {
-            if(localStorage.getItem("td_user_cards")) {
-                resolve(JSON.parse(localStorage.getItem("td_user_cards")))
-            } else {
-                Trello.get(`members/me/cards`).then(data => {
-                    localStorage.setItem("td_user_cards", JSON.stringify(data))
-                    resolve(data)
-                })
-            }
+            Trello.get(`members/me/cards`).then(data => {
+                resolve(data)
+            })
         })
     }
 
