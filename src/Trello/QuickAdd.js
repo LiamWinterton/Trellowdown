@@ -8,6 +8,7 @@ export class QuickAdd {
     static setup(boards) {
         // Add boards and lists to selects
         this.handleSelects(boards)
+        this.handleAddButton()
 
         // Add Members icons to organisation
         TrelloOrganisation.getCurrentOrganisation()
@@ -18,11 +19,21 @@ export class QuickAdd {
             })
     }
 
+    /**
+     * On button click, add card for board/list using title / description
+     */
+    static handleAddButton() {
+        const addButton = jQuery(`header #quick-add .buttons .button[data-event="add"]`)
+        addButton.on('click', event => {
+            event.preventDefault()
+            this.handleAddButtonClick()
+        })
+    }
+
     static handleSelects(boards) {
         const boardSelect = this.getBoardSelect()
         const listSelect = this.getListSelect()
-        const addButton = jQuery(`header #quick-add .buttons .button[data-event="add"]`)
-        const cacheButton = jQuery(`header #quick-add .buttons .button[data-event="clear-cache"]`)
+        
 
         // Add board options into select
         boards.forEach(board => {
@@ -39,22 +50,11 @@ export class QuickAdd {
             this.onBoardSelectChange()
         })
 
-        // On button click, add card for board/list using title / description
-        addButton.on('click', event => {
-            event.preventDefault()
-            this.handleButtonClick()
-        })
-
-        cacheButton.on('click', event => {
-            event.preventDefault()
-            Trellowdown.clearCache()
-        })
-
         this.onBoardSelectChange()
         this.clearInputs()
     }
 
-    static handleButtonClick() {
+    static handleAddButtonClick() {
         const boardID = this.getSelectedBoardID()
         const listID = this.getSelectedListID()
 

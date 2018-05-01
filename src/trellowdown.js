@@ -131,6 +131,29 @@ export class Trellowdown {
     }
 
     /**
+     * Handle buttons with data-event="clear-cache"
+     */
+    static handleCacheButtons() {
+        const cacheButtons = jQuery(`.button[data-event="clear-cache"]`)
+
+        cacheButtons.on('click', event => {
+            event.preventDefault()
+            this.clearCache()
+        })
+    }
+
+    static handleLogoutButton() {
+        const logoutButton = jQuery(".button[data-event='logout']")
+        
+        logoutButton.on('click', event => {
+            event.preventDefault()
+            localStorage.removeItem('trello_token')
+
+            this.clearCache()
+        })
+    }
+
+    /**
      * Function to run when trello has successfully authorized the user
      */
     authSuccess() {
@@ -145,6 +168,8 @@ export class Trellowdown {
 
             const addEvents = () => {
                 TrelloCard.handleCardEvents(myID)
+                Trellowdown.handleCacheButtons()
+                Trellowdown.handleLogoutButton()
             }
         
             let cards = data[0]
