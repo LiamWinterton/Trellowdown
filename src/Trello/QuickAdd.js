@@ -1,3 +1,4 @@
+import { Trellowdown } from '../trellowdown'
 import { TrelloOrganisation } from './TrelloOrganisation'
 import { TrelloBoard } from './TrelloBoard'
 import { TrelloList } from './TrelloList'
@@ -12,7 +13,6 @@ export class QuickAdd {
         TrelloOrganisation.getCurrentOrganisation()
             .then(id => TrelloOrganisation.getMembers(id))
             .then(members => {
-
                 const membersHTML = this.generateMembersHTML(members)
                 jQuery("header #quick-add .members").append(membersHTML)
             })
@@ -21,7 +21,8 @@ export class QuickAdd {
     static handleSelects(boards) {
         const boardSelect = this.getBoardSelect()
         const listSelect = this.getListSelect()
-        const addButton = jQuery(`header #quick-add .buttons .button`)
+        const addButton = jQuery(`header #quick-add .buttons .button[data-event="add"]`)
+        const cacheButton = jQuery(`header #quick-add .buttons .button[data-event="clear-cache"]`)
 
         // Add board options into select
         boards.forEach(board => {
@@ -42,6 +43,11 @@ export class QuickAdd {
         addButton.on('click', event => {
             event.preventDefault()
             this.handleButtonClick()
+        })
+
+        cacheButton.on('click', event => {
+            event.preventDefault()
+            Trellowdown.clearCache()
         })
 
         this.onBoardSelectChange()

@@ -27,13 +27,18 @@ export class TrelloOrganisation {
 
     static getMembers(organisationID) {
         return new Promise((resolve, reject) => {
-            const members = Trello.get(`organizations/${organisationID}/members`)
+            if(localStorage.getItem('td_organisation_members')) {
+                resolve(JSON.parse(localStorage.getItem('td_organisation_members')))
+            } else {
+                const members = Trello.get(`organizations/${organisationID}/members`)
 
-            members.then(members => {
-                this.getRealMembers(members).then(members => {
-                    resolve(members)
+                members.then(members => {
+                    this.getRealMembers(members).then(members => {
+                        localStorage.setItem('td_organisation_members', JSON.stringify(members))
+                        resolve(members)
+                    })
                 })
-            })
+            }
         })
     }
 }

@@ -30,7 +30,7 @@ export class TrelloBoard {
      * @param {number} boardID ID of the board
      * @param {string} userType Default: admin
      */
-    static addToBoard(memberID, boardID, userType="admin") {
+    static addToBoard(memberID, boardID, userType="normal") {
         return Trello.put(`boards/${boardID}/members/${memberID}`, { type: userType })
     }
 
