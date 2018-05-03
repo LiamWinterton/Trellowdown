@@ -1,0 +1,65 @@
+@import url(https://fonts.googleapis.com/css?family=Roboto)
+
+$option-checkbox-margin: 16px 0
+$option-checkbox-checked-color: rgb(51, 122, 183)
+$option-checkbox-border-color: rgba(0, 0, 0, 0.54)
+$option-checkbox-border-color-disabled: rgba(0, 0, 0, 0.26)
+$option-checkbox-checked-color-disabled: rgba(0, 0, 0, 0.26)
+
+$option-checkbox-size: 20px
+$option-checkbox-padding: 4px
+
+$option-checkbox-width: 2px
+$option-checkbox-color: #fff
+
+.option-checkbox
+	position: relative
+	margin: $option-checkbox-margin
+	text-align: left
+
+	&.option-checkbox-inline
+		display: inline-block
+
+	label
+		cursor: pointer
+
+		&:before, &:after
+			content: ""
+			position: absolute
+			left: 0
+			top: 0
+
+		&:before
+			// Bxx
+			width: $option-checkbox-size
+			height: $option-checkbox-size
+			background: #fff
+			border: 2px solid $option-checkbox-border-color
+			border-radius: 2px
+			cursor: pointer
+			transition: background .3s
+  
+		&:after
+			// checkmark
+
+	input[type="checkbox"]
+		outline: 0
+		margin-right: $option-checkbox-size - 10px
+		visibility: hidden
+
+		&:checked
+			+ label:before
+				background: $option-checkbox-checked-color
+				border: none
+			
+			+ label:after
+				$option-checkbox-size: $option-checkbox-size - 2*$option-checkbox-padding
+
+				transform: rotate(-45deg)
+				top: ($option-checkbox-size / 2) - 1px
+				left: $option-checkbox-padding
+				width: $option-checkbox-size
+				height: $option-checkbox-size / 2
+				border: $option-checkbox-width solid $option-checkbox-color
+				border-top-style: none
+				border-right-style: none
