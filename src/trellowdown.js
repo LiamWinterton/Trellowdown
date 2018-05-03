@@ -1,4 +1,5 @@
 import { config } from './config'
+import { TrellowdownOptions } from './trellowdownOptions'
 import { TrelloCard } from './Trello/TrelloCard'
 import { TrelloBoard } from './Trello/TrelloBoard'
 import { QuickAdd } from './Trello/QuickAdd'
@@ -192,6 +193,7 @@ export class Trellowdown {
 
                 // Add some click events to buttons and such
                 addEvents()
+                TrellowdownOptions.setup()
             })
         })
     }
