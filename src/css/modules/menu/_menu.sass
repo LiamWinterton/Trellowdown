@@ -22,26 +22,40 @@
     color: #343434
     z-index: 100
     display: block
-    overflow: scroll
+    overflow: visible
     padding: 0 0 80px 0
     transition: top 0.1s ease-in-out
     transition: right 1s cubic-bezier(.215,.61,.355,1)
 
-    &.active
-        right: 0
 
     +mq($from: desktop)
         top: 0
         width: 35%
         right: -300px
         max-width: 300px
-        overflow: auto
+        overflow: visible
         transition-duration: 0.3s
+
+    &.active
+        right: 0
 
     .menu-header,
     .menu-footer,
     .menu
         padding: $gutter
+
+    .menu-header
+        position: absolute
+        right: (300px + $gutter-small)
+        top: 0;
+
+        #menu-toggle
+            width: 65px
+            padding: ($gutter + 3px) $gutter ($gutter + 3px) $gutter;
+            background: #FFF;
+            border-radius: 100%;
+            cursor: pointer
+            z-index: 9999999
 
     .menu-footer
         position: absolute
@@ -54,11 +68,3 @@
             .button
                 padding: $gutter-small
                 margin: 0
-
-#menu-toggle
-    position: absolute
-    top: $gutter
-    right: $gutter
-    padding: ($gutter + 3px) $gutter ($gutter + 3px) $gutter;
-    background: #FFF;
-    border-radius: 100%;
