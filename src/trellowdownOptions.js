@@ -1,3 +1,4 @@
+import { Trellowdown } from './trellowdown'
 import { TrelloOrganisation } from "./Trello/TrelloOrganisation"
 import { TrelloMember } from "./Trello/TrelloMember";
 
@@ -23,6 +24,7 @@ export class TrellowdownOptions {
                 jQuery("#olly-boards").append(membersHTML)
                 jQuery("#olly-boards input").on("change", event => {
                     this.setSuperuserMember(jQuery("input[name=superuser-member]:checked", "#olly-boards").val())
+                    Trellowdown.refresh(false)
                 })
             })
     }

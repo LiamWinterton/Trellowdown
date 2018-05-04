@@ -155,12 +155,21 @@ export class Trellowdown {
         })
     }
 
+    static refresh(load=false) {
+        const _ = new Trellowdown()
+        console.log("Load passed: ", load)
+
+        _.authSuccess(load)
+    }
+
     /**
      * Function to run when trello has successfully authorized the user
      */
-    authSuccess() {
+    authSuccess(load=true) {
         let userCards
         let userID
+
+        console.log("Load in Auth: ", load)
 
         // Determine if user is Olly
         const getUserID = Trellowdown.getUserID()
@@ -171,7 +180,7 @@ export class Trellowdown {
                 // If it's olly (Me for now)
                 // MYID: 563383f6fcf3466124297d87
                 // OLLYID: 5452114aee1bdab3526e47e1
-                if(id == "5452114aee1bdab3526e47e1") {
+                if(id == "563383f6fcf3466124297d87") {
                     resolve(true)
                 } else {
                     resolve(false)
@@ -252,13 +261,17 @@ export class Trellowdown {
                 jQuery("#app").html(Trellowdown.generateHTML(sorted))
 
                 // Send boards over to QuickAdd to get that started
-                QuickAdd.setup(sorted)
+                if(load) {
+                    QuickAdd.setup(sorted)
+                }
 
                 // Add some click events to buttons and such
                 addEvents()
                 TrellowdownOptions.setup()
+
+                console.log(load)
                 
-                if(superUser) {
+                if(superUser && load) {
                     TrellowdownOptions.setupSuperuserOptions()
                 }
             })
