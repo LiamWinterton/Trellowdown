@@ -29,11 +29,17 @@ export class Trellowdown {
      * Returns an Array of Cards from the Trello API that the user is a member of
      * @returns {Object[]}
      */
-    static getUserCards() {
+    static getUserCards(id = false) {
         return new Promise(resolve => {
-            Trello.get(`members/me/cards`).then(data => {
-                resolve(data)
-            })
+            if(id) {
+                Trello.get(`members/${id}/cards`).then(data => {
+                    resolve(data)
+                })
+            } else {
+                Trello.get(`members/me/cards`).then(data => {
+                    resolve(data)
+                })
+            }
         })
     }
 
@@ -149,26 +155,85 @@ export class Trellowdown {
         })
     }
 
+    static refresh(load=false) {
+        const _ = new Trellowdown()
+        _.authSuccess(load)
+    }
+
     /**
      * Function to run when trello has successfully authorized the user
      */
-    authSuccess() {
-        const userCards = Trellowdown.getUserCards()
-        const userID = Trellowdown.getUserID()
-        const OllyID = "5452114aee1bdab3526e47e1"
+    authSuccess(load=true) {
+        let userCards
+        let userID
+
+        // Determine if user is Olly
+        const getUserID = Trellowdown.getUserID()
+
+        const isOlly = new Promise(resolve => {
+            getUserID.then(id => {
+                // If it's olly (Me for now)
+                // MYID: 563383f6fcf3466124297d87
+                // OLLYID: 5452114aee1bdab3526e47e1
+                if(id == "563383f6fcf3466124297d87") {
+                    resolve(true)
+                } else {
+                    resolve(false)
+                }
+            })
+        })
+
+        const data = new Promise(resolve => {
+            isOlly.then(olly => {
+                if(olly) {
+                    const selectedMember = TrellowdownOptions.getOption("td_olly_override")
+
+                    if(!selectedMember.error) {
+                        Trellowdown.getUserCards(selectedMember.value).then(cards => {
+                            let result = {
+                                userCards: cards,
+                                userID: selectedMember.value,
+                                isSuperuser: true
+                            }
         
+                            resolve(result)
+                        })
+                    } else {
+                        Promise.all([Trellowdown.getUserCards(), getUserID]).then(data => {
+                            let result = {
+                                userCards: data[0],
+                                userID: data[1],
+                                isSuperuser: true
+                            }
+    
+                            resolve(result)
+                        })
+                    }
+                } else {
+                    Promise.all([Trellowdown.getUserCards(), getUserID]).then(data => {
+                        let result = {
+                            userCards: data[0],
+                            userID: data[1],
+                            isSuperuser: false
+                        }
+
+                        resolve(result)
+                    })
+                }
+            })
+        })
+
         // Get all the users cards and the user ID, then
-        Promise.all([userCards, userID]).then(data => {
-            const myID = data[1]
-            const OllyID = "5452114aee1bdab3526e47e1"
+        data.then(data => {
+            const myID = data.userID
+            const superUser = data.isSuperuser
+            let cards = data.userCards
 
             const addEvents = () => {
                 TrelloCard.handleCardEvents(myID)
                 Trellowdown.handleCacheButtons()
                 Trellowdown.handleLogoutButton()
             }
-        
-            let cards = data[0]
         
             // Remove any unarchived cards and make sure all cards have user attached
             cards = TrelloCard.filterByClosed(cards)
@@ -189,11 +254,17 @@ export class Trellowdown {
                 jQuery("#app").html(Trellowdown.generateHTML(sorted))
 
                 // Send boards over to QuickAdd to get that started
-                QuickAdd.setup(sorted)
+                if(load) {
+                    QuickAdd.setup(sorted)
+                }
 
                 // Add some click events to buttons and such
                 addEvents()
                 TrellowdownOptions.setup()
+                
+                if(superUser && load) {
+                    TrellowdownOptions.setupSuperuserOptions()
+                }
             })
         })
     }

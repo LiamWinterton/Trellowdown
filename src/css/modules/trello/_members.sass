@@ -1,0 +1,34 @@
+.member-icons
+    +grid(3)
+    grid-gap: 4px
+
+    label
+        width: 30px
+        height: 30px
+        background: #d6dadc
+        color: #4d4d4d
+        border-radius: 100%
+        font-family: "Helvetica Neue", Arial, Helvetica, sans-serif
+        font-size: 14px
+        font-weight: bold
+
+        img
+            border-radius: 100%
+
+        // Styles to enable image / span input
+        & > input
+            visibility: hidden
+            position: absolute
+
+            &:checked + img,
+            &:checked + span
+                border: 2px solid #2196F3
+
+        img, span
+            display: flex
+            justify-content: center
+            align-items: center
+            width: 30px
+            height: 30px
+            border-radius: 100%
+            cursor: pointer
