@@ -157,8 +157,6 @@ export class Trellowdown {
 
     static refresh(load=false) {
         const _ = new Trellowdown()
-        console.log("Load passed: ", load)
-
         _.authSuccess(load)
     }
 
@@ -169,14 +167,11 @@ export class Trellowdown {
         let userCards
         let userID
 
-        console.log("Load in Auth: ", load)
-
         // Determine if user is Olly
         const getUserID = Trellowdown.getUserID()
 
         const isOlly = new Promise(resolve => {
             getUserID.then(id => {
-                console.log("ID GOT: ", id)
                 // If it's olly (Me for now)
                 // MYID: 563383f6fcf3466124297d87
                 // OLLYID: 5452114aee1bdab3526e47e1
@@ -195,7 +190,6 @@ export class Trellowdown {
 
                     if(!selectedMember.error) {
                         Trellowdown.getUserCards(selectedMember.value).then(cards => {
-                            console.log("TEST 1")
                             let result = {
                                 userCards: cards,
                                 userID: selectedMember.value,
@@ -217,7 +211,6 @@ export class Trellowdown {
                     }
                 } else {
                     Promise.all([Trellowdown.getUserCards(), getUserID]).then(data => {
-                        console.log("TEST 2")
                         let result = {
                             userCards: data[0],
                             userID: data[1],
@@ -268,8 +261,6 @@ export class Trellowdown {
                 // Add some click events to buttons and such
                 addEvents()
                 TrellowdownOptions.setup()
-
-                console.log(load)
                 
                 if(superUser && load) {
                     TrellowdownOptions.setupSuperuserOptions()

@@ -14,7 +14,6 @@ export class TrelloCard {
         return new Promise((resolve, reject) => {
             Trello.post(`cards`, card).then(response => {
                 if(card.idMembers) {
-                    console.log(card.idMembers, response.id, response.idBoard)
                     this.addMemberToCard(card.idMembers, response.id, response.idBoard)
                 }
             })
