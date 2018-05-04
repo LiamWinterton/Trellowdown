@@ -207,14 +207,14 @@ export class Trellowdown {
 
         // Get all the users cards and the user ID, then
         data.then(data => {
+            const myID = data.userID
+            let cards = data.userCards
+
             const addEvents = () => {
                 TrelloCard.handleCardEvents(myID)
                 Trellowdown.handleCacheButtons()
                 Trellowdown.handleLogoutButton()
             }
-
-            const myID = data.userID
-            let cards = data.userCards
         
             // Remove any unarchived cards and make sure all cards have user attached
             cards = TrelloCard.filterByClosed(cards)
