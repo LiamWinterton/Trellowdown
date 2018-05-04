@@ -29,11 +29,17 @@ export class Trellowdown {
      * Returns an Array of Cards from the Trello API that the user is a member of
      * @returns {Object[]}
      */
-    static getUserCards() {
+    static getUserCards(id = false) {
         return new Promise(resolve => {
-            Trello.get(`members/me/cards`).then(data => {
-                resolve(data)
-            })
+            if(id) {
+                Trello.get(`members/${id}/cards`).then(data => {
+                    resolve(data)
+                })
+            } else {
+                Trello.get(`members/me/cards`).then(data => {
+                    resolve(data)
+                })
+            }
         })
     }
 
@@ -153,22 +159,62 @@ export class Trellowdown {
      * Function to run when trello has successfully authorized the user
      */
     authSuccess() {
-        const userCards = Trellowdown.getUserCards()
-        const userID = Trellowdown.getUserID()
-        const OllyID = "5452114aee1bdab3526e47e1"
-        
-        // Get all the users cards and the user ID, then
-        Promise.all([userCards, userID]).then(data => {
-            const myID = data[1]
-            const OllyID = "5452114aee1bdab3526e47e1"
+        let userCards
+        let userID
 
+        // Determine if user is Olly
+        const getUserID = Trellowdown.getUserID()
+
+        const isOlly = new Promise(resolve => {
+            getUserID.then(id => {
+                console.log("ID GOT: ", id)
+                // If it's olly (Me for now)
+                // MYID: 563383f6fcf3466124297d87
+                // OLLYID: 5452114aee1bdab3526e47e1
+                if(id == "563383f6fcf3466124297d87") {
+                    resolve(true)
+                } else {
+                    resolve(false)
+                }
+            })
+        })
+
+        const data = new Promise(resolve => {
+            isOlly.then(olly => {
+                if(olly) {
+                    const selectedMember = TrellowdownOptions.getOption("td_olly_override")
+
+                    Trellowdown.getUserCards(selectedMember.value).then(cards => {
+                        let result = {
+                            userCards: cards,
+                            userID: selectedMember.value
+                        }
+    
+                        resolve(result)
+                    })
+                } else {
+                    Promise.all([Trellowdown.getUserCards(), getUserID]).then(data => {
+                        let result = {
+                            userCards: data[0],
+                            userID: data[1]
+                        }
+
+                        resolve(result)
+                    })
+                }
+            })
+        })
+
+        // Get all the users cards and the user ID, then
+        data.then(data => {
             const addEvents = () => {
                 TrelloCard.handleCardEvents(myID)
                 Trellowdown.handleCacheButtons()
                 Trellowdown.handleLogoutButton()
             }
-        
-            let cards = data[0]
+
+            const myID = data.userID
+            let cards = data.userCards
         
             // Remove any unarchived cards and make sure all cards have user attached
             cards = TrelloCard.filterByClosed(cards)

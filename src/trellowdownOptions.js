@@ -19,6 +19,14 @@ export class TrellowdownOptions {
         this.setOption(this.setQuickAdd, quickAddPreference, true)
     }
 
+    static getOption(option) {
+        if(localStorage.getItem(option) !== null) {
+            return { value: localStorage.getItem(option) }
+        } else {
+            return { error: "No Option Found" }
+        }
+    }
+
     static setOption(callback, value, defaultValue) {
         if(value === "true") {
             callback(true)
