@@ -1,3 +1,6 @@
+import { TrelloOrganisation } from "./Trello/TrelloOrganisation"
+import { TrelloMember } from "./Trello/TrelloMember";
+
 export class TrellowdownOptions {
     static setup() {
         jQuery("#navigation-toggle").on("click", function(event) {
@@ -9,6 +12,19 @@ export class TrellowdownOptions {
         })
 
         TrellowdownOptions.setDefaults()
+    }
+
+    static setupSuperuserOptions() {
+        TrelloOrganisation.getCurrentOrganisation()
+            .then(id => TrelloOrganisation.getMembers(id))
+            .then(members => {
+                const membersHTML = TrelloMember.generateMembersHTML(members, "superuser-member")
+
+                jQuery("#olly-boards").append(membersHTML)
+                jQuery("#olly-boards input").on("change", event => {
+                    this.setSuperuserMember(jQuery("input[name=superuser-member]:checked", "#olly-boards").val())
+                })
+            })
     }
 
     static setDefaults() {
@@ -59,5 +75,9 @@ export class TrellowdownOptions {
             jQuery("#quick-add-toggle").prop('checked', false)
             localStorage.setItem("td_quick_add_toggle", false)
         }
+    }
+
+    static setSuperuserMember(value) {
+        localStorage.setItem("td_olly_override", value)
     }
 }

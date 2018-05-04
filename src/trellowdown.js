@@ -171,7 +171,7 @@ export class Trellowdown {
                 // If it's olly (Me for now)
                 // MYID: 563383f6fcf3466124297d87
                 // OLLYID: 5452114aee1bdab3526e47e1
-                if(id == "563383f6fcf3466124297d87") {
+                if(id == "5452114aee1bdab3526e47e1") {
                     resolve(true)
                 } else {
                     resolve(false)
@@ -184,19 +184,35 @@ export class Trellowdown {
                 if(olly) {
                     const selectedMember = TrellowdownOptions.getOption("td_olly_override")
 
-                    Trellowdown.getUserCards(selectedMember.value).then(cards => {
-                        let result = {
-                            userCards: cards,
-                            userID: selectedMember.value
-                        }
+                    if(!selectedMember.error) {
+                        Trellowdown.getUserCards(selectedMember.value).then(cards => {
+                            console.log("TEST 1")
+                            let result = {
+                                userCards: cards,
+                                userID: selectedMember.value,
+                                isSuperuser: true
+                            }
+        
+                            resolve(result)
+                        })
+                    } else {
+                        Promise.all([Trellowdown.getUserCards(), getUserID]).then(data => {
+                            let result = {
+                                userCards: data[0],
+                                userID: data[1],
+                                isSuperuser: true
+                            }
     
-                        resolve(result)
-                    })
+                            resolve(result)
+                        })
+                    }
                 } else {
                     Promise.all([Trellowdown.getUserCards(), getUserID]).then(data => {
+                        console.log("TEST 2")
                         let result = {
                             userCards: data[0],
-                            userID: data[1]
+                            userID: data[1],
+                            isSuperuser: false
                         }
 
                         resolve(result)
@@ -208,6 +224,7 @@ export class Trellowdown {
         // Get all the users cards and the user ID, then
         data.then(data => {
             const myID = data.userID
+            const superUser = data.isSuperuser
             let cards = data.userCards
 
             const addEvents = () => {
@@ -240,6 +257,10 @@ export class Trellowdown {
                 // Add some click events to buttons and such
                 addEvents()
                 TrellowdownOptions.setup()
+                
+                if(superUser) {
+                    TrellowdownOptions.setupSuperuserOptions()
+                }
             })
         })
     }
