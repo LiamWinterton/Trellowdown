@@ -9,4 +9,11 @@ jQuery(document).ready(function() {
     const trellowdown = new Trellowdown()
 
     trellowdown.run()
+
+    // Add JS for menu toggle
+    jQuery("#menu-toggle").on('click', event => {
+        jQuery(".menu-container").toggleClass("active");
+        jQuery("#menu-toggle").toggleClass("active")
+        jQuery("#menu-toggle .burger").toggleClass("is-active")
+    })
 })

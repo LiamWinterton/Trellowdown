@@ -3,6 +3,7 @@ import { TrelloOrganisation } from './TrelloOrganisation'
 import { TrelloBoard } from './TrelloBoard'
 import { TrelloList } from './TrelloList'
 import { TrelloCard } from './TrelloCard'
+import { TrelloMember } from './TrelloMember';
 
 export class QuickAdd {
     static setup(boards) {
@@ -14,7 +15,7 @@ export class QuickAdd {
         TrelloOrganisation.getCurrentOrganisation()
             .then(id => TrelloOrganisation.getMembers(id))
             .then(members => {
-                const membersHTML = this.generateMembersHTML(members)
+                const membersHTML = TrelloMember.generateMembersHTML(members)
                 jQuery("header #quick-add .members").append(membersHTML)
             })
     }
@@ -88,29 +89,6 @@ export class QuickAdd {
                     listSelect.append(`<option value="${list.id}">${list.name}</option>`)
                 })
             })
-    }
-
-    static generateMembersHTML(members) {
-        let html = ""
-
-        html += `<div class="member-icons">`
-
-            members.forEach(member => {
-                html += `<label>`
-                    html += `<input type="radio" name="selected-member" value="${member.id}" class="member-icon" />`
-                    
-                    if(member.avatarHash !== null && member.avatarHash !== "") {
-                        html += `<img src="${member.avatarUrl}/30.png" />`
-                    } else {
-                        html += `<span>${member.initials}</span>`
-                    }
-
-                html += `</label>`
-            })
-
-        html += `</div>`
-
-        return html
     }
 
     static getCardTitle() {
