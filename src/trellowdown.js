@@ -175,7 +175,7 @@ export class Trellowdown {
                 // If it's olly (Me for now)
                 // MYID: 563383f6fcf3466124297d87
                 // OLLYID: 5452114aee1bdab3526e47e1
-                if(id == "563383f6fcf3466124297d87") {
+                if(id == "5452114aee1bdab3526e47e1") {
                     resolve(true)
                 } else {
                     resolve(false)
