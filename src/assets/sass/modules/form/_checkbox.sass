@@ -44,7 +44,8 @@ $option-checkbox-color: #fff
 		margin-right: $option-checkbox-size - 10px
 		visibility: hidden
 
-		&:checked
+	&.checked
+		input[type="checkbox"]
 			+ label:before
 				background: $option-checkbox-checked-color
 				border: none
