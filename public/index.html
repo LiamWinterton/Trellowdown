@@ -1,145 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<meta http-equiv="X-UA-Compatible" content="ie=edge">
-	<title>Tasks - A Different way of using Trello</title>
-	<link rel="stylesheet" href="assets/stylesheet.css">
-	<link rel="icon" type="image/png" href="./favicon.ico">
-</head>
-<body>
-	<header>
-		<div class="container">
-			<div id="logo">
-				<img src="assets/images/logo.png" alt="Tasks Logo">
-			</div>
-			<div id="quick-add">
-				<div class="inputs">
-					<div class="row">
-						<select name="trello-boards" id="trello-boards">
-							<option value="0" selected>Loading...</option>
-						</select>
-						<select name="trello-lists" id="trello-lists">
-							<option value="0" selected>Loading...</option>
-						</select>
-					</div>
-					<div class="row">
-						<input type="text" placeholder="Title" name="title">
-						<input type="text" placeholder="Description" name="description">
-					</div>
-				</div>
-
-				<div class="members"></div>
-
-				<div class="buttons">
-					<a class="button button-secondary" data-event="add">Add</a>
-				</div>
-			</div>
-		</div>
-		<div class="menu-container">
-			<div class="menu-header">
-				<div id="menu-toggle">
-					<div class="burger"></div>
-				</div>
-			</div>
-			<div class="menu">
-				<!-- Any settings go here -->
-				<h1>Options</h1>
-				<div class="form-group">
-					<div class="form-group-title"><h3>Navigation</h3></div>
-					<div class="option option-checkbox">
-						<input type="checkbox" name="navigation-toggle" id="navigation-toggle">
-						<label for="navigation-toggle">Show Navigation Menu</label>
-					</div>
-				</div>
-				<div class="form-group">
-					<div class="form-group-title"><h3>Quick Add</h3></div>
-					<div class="option option-checkbox">
-						<input type="checkbox" name="quick-add-toggle" id="quick-add-toggle">
-						<label for="quick-add-toggle">Show Quick Add Menu</label>
-					</div>
-				</div>
-			</div>
-			<div class="menu-footer">
-				<div id="olly-boards"></div>
-				<div id="extra-buttons">
-					<a class="button" data-event="clear-cache">Clear Cache</a>
-					<a class="button button-danger" data-event="logout">Logout</a>
-				</div>
-			</div>
-		</div>
-	</header>
-
-	<div class="container">
-		<div id="app">
-			<div class="loader-container">
-				<div class="group-1">
-					<div class="line line1">
-						<div class="dash dash-1 exp-40 div"></div>
-						<div class="dash dash-2 exp-70 class-name"></div>
-						<div class="dash dash-3 exp-110 class"></div>
-						<div class="dash dash-4 exp-70 class"></div>
-					</div>
-					<div class="line line2">
-						<div class="dash dash-1 exp-40 div"></div>
-						<div class="dash dash-2 exp-70 class-name"></div>
-						<div class="dash dash-3 exp-90 class"></div>
-					</div>
-					<div class="line line3">
-						<div class="dash dash-1 exp-300 par"></div>
-					</div>
-					<div class="line line4">
-						<div class="dash dash-1 exp-200 par"></div>
-					</div>
-					<div class="line line5">
-						<div class="dash dash-1 exp-40 div"></div>
-					</div>
-					<div class="line line6">
-						<div class="dash dash-1 exp-40 div"></div>
-					</div>
-				</div>		
-				<div class="group-2">
-					<div class="line line1">
-						<div class="dash dash-1 div"></div>
-						<div class="dash dash-2 class-name"></div>
-						<div class="dash dash-3 class"></div>
-						<div class="dash dash-4 class"></div>
-					</div>
-					<div class="line line2">
-						<div class="dash dash-1 div"></div>
-						<div class="dash dash-2 exp70 class-name"></div>
-						<div class="dash dash-3 exp90 class"></div>
-					</div>
-					<div class="line line3">
-						<div class="dash dash-1 par"></div>
-					</div>
-					<div class="line line4">
-						<div class="dash dash-1 par"></div>
-					</div>
-					<div class="line line5">
-						<div class="dash dash-1 div"></div>
-					</div>
-					<div class="line line6">
-						<div class="dash dash-1 div"></div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-
-	<footer>
-		<div class="container">
-			<div class="section"></div>
-			<div class="section"></div>
-			<div class="section">
-				<a href="https://trello.com/iamolly/recommend"><img src="assets/images/trello-powered.png" alt="Powered by Trello"></a>
-			</div>
-		</div>
-	</footer>
-
-	<script src="https://code.jquery.com/jquery-1.7.1.min.js"></script>
-	<script src="https://api.trello.com/1/client.js?key=66618145f248a5db0342ee3981f5bc7b"></script>
-	<script src="assets/bundle.js"></script>
-</body>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="theme-color" content="#272822">
+    <link rel="manifest" href="%PUBLIC_URL%/manifest.json">
+    <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico">
+    <title>Trellowdown - Getting the most out of Trello</title>
+  </head>
+  <body>
+    <noscript>
+      You need to enable JavaScript to run this app.
+    </noscript>
+    <div id="root"></div>
+    <script src="https://code.jquery.com/jquery-1.7.1.min.js"></script>
+	  <script src="https://api.trello.com/1/client.js?key=66618145f248a5db0342ee3981f5bc7b"></script>
+  </body>
 </html>
