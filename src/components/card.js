@@ -6,9 +6,7 @@ class Card extends Component {
         super(props)
 
         this.state = {
-            comment: "",
-            dueDate: (this.props.card.due !== null) ? new Date(Date.parse(this.props.card.due)) : false,
-            displayTitle: (this.props.card.boardName) ? this.props.card.boardName + " - " + this.props.card.name : this.props.card.name
+            comment: ""
         }
 
         this.handleTextarea = this.handleTextarea.bind(this)
@@ -26,72 +24,37 @@ class Card extends Component {
 
     render() {
         // Card Title
-        let title =  ""
+        const displayTitle = (this.props.card.boardName) ? this.props.card.boardName + " - " + this.props.card.name : this.props.card.name
+
+        let overduelabel = false
         
-        if(this.state.dueDate) {
-            let difference = Math.floor((this.state.dueDate - +new Date()) / 86400000)
-            let classColor = ""
+        if(this.props.card.due !== null) {
+            const dueDate = new Date(Date.parse(this.props.card.due))
+
+            let difference = Math.floor((dueDate - +new Date()) / 86400000)
+            let classColor = "yellow"
 
             if(difference < 0) {
                 classColor = "red"
             } else if(difference === 0) {
                 classColor = "orange"
-            } else if(difference > 0 && difference < 4) {
-                classColor = "yellow"
             }
 
-            title = (
-                <div className="title">
-                    <h3><a href={this.props.card.url} target="_blank">{this.state.displayTitle}</a></h3>
-                    <div className={"overdue " + classColor}></div>
-                </div>
-            )
-        } else {
-            title = (
-                <div className="title">
-                    <h3><a href={this.props.card.url} target="_blank">{this.state.displayTitle}</a></h3>
-                </div>
-            )
-        }
-    
-        // Card Info
-        let moreInfo = false
-    
-        if(this.state.dueDate) {
-            let difference = Math.floor((this.state.dueDate - +new Date()) / 86400000)
-            let response
-    
-            if(difference < 0) {
-                response = `Overdue by ${Math.abs(difference)} day(s)!`
-            } else if(difference === 0) {
-                response = `Due in Today`
-            } else if(difference > 0) {
-                response = `Due in ${Math.abs(difference)} day(s)!`
-            }
-    
-            moreInfo = (
-                <div className="more-info">
-                    <ul>
-                        <li>{response}</li>
-                    </ul>
-                </div>
-            )
+            overduelabel = <div className={"overdue " + classColor}>{Math.abs(difference)}</div>
         }
 
         return (
             <div className="card" key={this.props.card.id}>
-                {title}
-                {moreInfo}
+                <div className="title">
+                    <h3><a href={this.props.card.url} target="_blank">{displayTitle}</a></h3>
+                    {overduelabel}
+                </div>
                 <div className="buttons">
                     <div className="actions">
                         <div className="comment">
                             <textarea value={this.state.comment} onChange={this.handleTextarea} />
                         </div>
-                        <Button
-                            click={this.handleButtonClick}
-                            classes={["button", "button-secondary"]}
-                            text="Notify"
-                        />
+                        <Button classes={["button", "button-secondary"]} text="Notify" click={this.handleButtonClick} />
                     </div>
                 </div>
             </div>

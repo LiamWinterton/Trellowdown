@@ -24,9 +24,14 @@
             max-width: calc(100% - 65px)
 
         .overdue
+            display: flex
+            justify-content: center
+            align-items: center
             width: 60px
             height: 28px
             border-radius: 2px
+            color: #ffffff
+            font-weight: bold
 
             &.red
                 background: #F44336
@@ -35,7 +40,7 @@
                 background: #FF9800
 
             &.yellow
-                background: #FFD54F
+                background: #efbc1c
 
     .actions
         +grid(2)
